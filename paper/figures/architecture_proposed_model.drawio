@@ -138,17 +138,25 @@
 
         <!-- 5. Classifier Head Container -->
         <mxCell id="head_container" value="&lt;b style=&quot;color: #B71C1C;&quot;&gt;3-Stage Classifier Head&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1275" y="160" width="165" height="175" as="geometry"/>
+          <mxGeometry x="1275" y="155" width="165" height="195" as="geometry"/>
         </mxCell>
 
         <mxCell id="fc1" value="Dense 1536 &amp;rarr; 128&lt;br&gt;ReLU + Dropout (0.3)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="195" width="135" height="35" as="geometry"/>
+          <mxGeometry x="1290" y="190" width="135" height="35" as="geometry"/>
         </mxCell>
         <mxCell id="fc2" value="Dense 128 &amp;rarr; 64&lt;br&gt;ReLU + Dropout (0.2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="240" width="135" height="35" as="geometry"/>
+          <mxGeometry x="1290" y="245" width="135" height="35" as="geometry"/>
         </mxCell>
         <mxCell id="fc3" value="Dense 64 &amp;rarr; 1 (Logit z)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="285" width="135" height="30" as="geometry"/>
+          <mxGeometry x="1290" y="300" width="135" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Internal Downward Connecting Arrows in Classifier Head -->
+        <mxCell id="edge_fc1_to_fc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc1" target="fc2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_fc2_to_fc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc2" target="fc3">
+          <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
         <!-- Arrow: GAP -> Classifier Head -->
@@ -164,7 +172,7 @@
         <!-- Arrow: FC3 -> Decision -->
         <mxCell id="edge_fc_to_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="fc3" target="decision_box">
           <mxGeometry relative="1" as="geometry">
-            <Array points="1450" y="300"/>
+            <Array points="1450" y="315"/>
             <Array points="1450" y="247"/>
           </mxGeometry>
         </mxCell>

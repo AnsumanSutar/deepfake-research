@@ -153,17 +153,25 @@ def generate_drawio_xml(output_path):
 
         <!-- 5. Classifier Head Container -->
         <mxCell id="head_container" value="&lt;b style=&quot;color: #B71C1C;&quot;&gt;3-Stage Classifier Head&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1275" y="160" width="165" height="175" as="geometry"/>
+          <mxGeometry x="1275" y="155" width="165" height="195" as="geometry"/>
         </mxCell>
 
         <mxCell id="fc1" value="Dense 1536 &amp;rarr; 128&lt;br&gt;ReLU + Dropout (0.3)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="195" width="135" height="35" as="geometry"/>
+          <mxGeometry x="1290" y="190" width="135" height="35" as="geometry"/>
         </mxCell>
         <mxCell id="fc2" value="Dense 128 &amp;rarr; 64&lt;br&gt;ReLU + Dropout (0.2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="240" width="135" height="35" as="geometry"/>
+          <mxGeometry x="1290" y="245" width="135" height="35" as="geometry"/>
         </mxCell>
         <mxCell id="fc3" value="Dense 64 &amp;rarr; 1 (Logit z)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="285" width="135" height="30" as="geometry"/>
+          <mxGeometry x="1290" y="300" width="135" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Internal Downward Connecting Arrows in Classifier Head -->
+        <mxCell id="edge_fc1_to_fc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc1" target="fc2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_fc2_to_fc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc2" target="fc3">
+          <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
         <!-- Arrow: GAP -> Classifier Head -->
@@ -179,7 +187,7 @@ def generate_drawio_xml(output_path):
         <!-- Arrow: FC3 -> Decision -->
         <mxCell id="edge_fc_to_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="fc3" target="decision_box">
           <mxGeometry relative="1" as="geometry">
-            <Array points="1450" y="300"/>
+            <Array points="1450" y="315"/>
             <Array points="1450" y="247"/>
           </mxGeometry>
         </mxCell>
@@ -194,8 +202,8 @@ def generate_drawio_xml(output_path):
     print(f"Generated clean left-to-right draw.io XML at: {output_path}")
 
 def generate_clean_block_diagram_png(output_path):
-    fig, ax = plt.subplots(figsize=(11.5, 5.5), dpi=300)
-    ax.set_xlim(0, 115)
+    fig, ax = plt.subplots(figsize=(12.2, 5.5), dpi=300)
+    ax.set_xlim(0, 122)
     ax.set_ylim(0, 56)
     ax.axis('off')
 
@@ -228,7 +236,7 @@ def generate_clean_block_diagram_png(output_path):
         ax.add_patch(box)
         if title:
             ax.text(x + w/2, y + h - 2.8, title, ha='center', va='center',
-                    fontsize=9.2, fontweight='bold', color=c_text)
+                    fontsize=8.5, fontweight='bold', color=c_text)
         curr_y = y + h - 5.5 if title else y + h/2 + 1.2 * (len(lines)-1)
         for line in lines:
             ax.text(x + w/2, curr_y, line, ha='center', va='center',
@@ -329,23 +337,45 @@ def generate_clean_block_diagram_png(output_path):
         "Pooling",
         "$\\bar{y} \\in \\mathbb{R}^{1536}$"
     ], c_gap_bg, c_gap_border)
-    draw_arrow(94, 29, 96, 29)
 
-    # 5. Classifier Head
-    draw_card(96, 17, 9.5, 24, "Classifier\nHead", [
-        "FC 1536→128",
-        "(ReLU, p=0.3)",
-        "↓",
-        "FC 128→64",
-        "(ReLU, p=0.2)",
-        "↓",
-        "FC 64→1",
+    # 5. Classifier Head Container with 3 Sequential Stages
+    head_box = FancyBboxPatch((97, 9.5), 12.5, 39.5, boxstyle="round,pad=0.2,rounding_size=1.5",
+                              facecolor=c_head_bg, edgecolor=c_head_border, linewidth=1.8, linestyle='--')
+    ax.add_patch(head_box)
+    ax.text(103.25, 46.2, "3-Stage\nClassifier Head", ha='center', va='center',
+            fontsize=8.0, fontweight='bold', color='#B71C1C', linespacing=0.95)
+
+    # Arrow from GAP into Dense 1536->128
+    ax.plot([94, 96, 96], [29, 29, 37.5], color='#263238', lw=1.6)
+    draw_arrow(96, 37.5, 98, 37.5)
+
+    # Sub-box 1
+    draw_card(98, 33.5, 10.5, 8, "Dense 1536→128", [
+        "ReLU + Drop(0.3)"
+    ], '#FFFFFF', '#E53935')
+
+    # Downward arrow 1 -> 2
+    draw_arrow(103.25, 33.5, 103.25, 30.5)
+
+    # Sub-box 2
+    draw_card(98, 22.5, 10.5, 8, "Dense 128→64", [
+        "ReLU + Drop(0.2)"
+    ], '#FFFFFF', '#E53935')
+
+    # Downward arrow 2 -> 3
+    draw_arrow(103.25, 22.5, 103.25, 19.5)
+
+    # Sub-box 3
+    draw_card(98, 12.5, 10.5, 7, "Dense 64→1", [
         "Logit $z$"
-    ], c_head_bg, c_head_border)
-    draw_arrow(105.5, 29, 107.5, 29)
+    ], '#FFFFFF', '#E53935')
+
+    # Arrow from Dense 64->1 into Decision Box
+    ax.plot([108.5, 110.5, 110.5], [16, 16, 29], color='#263238', lw=1.6)
+    draw_arrow(110.5, 29, 112.5, 29)
 
     # 6. Decision
-    draw_card(107.5, 21, 6.5, 16, "Decision", [
+    draw_card(112.5, 21, 6.8, 16, "Decision", [
         "$\\sigma(z)$",
         "$P(\\text{Fake})$",
         "Threshold",
