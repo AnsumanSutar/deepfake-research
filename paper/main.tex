@@ -212,7 +212,7 @@ To evaluate detection efficacy and operational safety under compression, models 
 In security-critical deepfake screening, False Negatives ($FN$) represent severe operational vulnerability (malicious deepfakes escaping detection), whereas False Positives ($FP$) represent user inconvenience. Evaluating $MCC$ and error trade-offs provides a balanced view of operational reliability.
 
 \subsection{Implementation Details}
-All models were implemented in PyTorch using the timm library. Training was executed on an NVIDIA GeForce RTX 3050 Ti Laptop GPU. Images were resized to $224 \times 224$ and normalized using ImageNet channel statistics. Evaluation was conducted in strict inference mode with deterministic seeds.
+All models were implemented in PyTorch using the timm library. Training and inference were executed on an NVIDIA GeForce RTX 3050 Laptop GPU (4\,GB GDDR6) paired with an AMD Ryzen 5 5600H CPU and 16\,GB system RAM, utilizing CUDA 12.4 with Automatic Mixed Precision (AMP). Images were resized to $224 \times 224$ and normalized using ImageNet channel statistics. All experiments were conducted in strict deterministic mode with fixed random seeds (seed 42).
 
 \section{Results and Discussions}
 
@@ -365,7 +365,7 @@ However, under severe compression (QF20), the baseline EfficientNet-B3 exhibits 
 \subsection{Limitations}
 While the proposed framework shows substantial robustness improvements, two limitations should be noted:
 \begin{enumerate}
-    \item The current setup evaluates static $256 \times 256$ face crops. Real world video manipulations involve temporal inconsistencies across consecutive frames that static spatial models cannot exploit.
+    \item The current setup evaluates static $256 \times 256$ face crops (resized to $224 \times 224$ for network input). Real world video manipulations involve temporal inconsistencies across consecutive frames that static spatial models cannot exploit.
     \item Experiments utilized simulated JPEG compression with standard quantization matrices. In practical environments, social media platforms apply proprietary multi-stage compression pipelines that combine spatial downsampling with video codecs (e.g., H.264, AV1).
 \end{enumerate}
 
