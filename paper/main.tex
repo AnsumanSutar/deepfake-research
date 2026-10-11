@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{url}
+\usepackage{placeins}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -148,14 +149,8 @@ Optimization minimizes the Binary Cross-Entropy (BCE) objective:
 \end{equation}
 Training uses the Adam optimizer with learning rate $\eta = 10^{-4}$ and mini-batch size $B = 16$ across 10 epochs. A two-stage transfer learning schedule is employed: the first two epochs freeze the backbone to stabilize the classifier head, followed by eight epochs of end-to-end fine-tuning.
 
+\FloatBarrier
 \section{Experimental Setup and Dataset}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/experimental_workflow.png}
-\caption{Flowchart of the complete experimental and evaluation methodology, illustrating dataset partition, stochastic compression-aware training, multi-regime testing, threshold optimization, and statistical validation aligning with Table I, Table II, and Table III.}
-\label{fig:workflow}
-\end{figure}
 
 The end-to-end experimental workflow is summarized in Fig. \ref{fig:workflow}.
 
@@ -170,6 +165,13 @@ To ensure experimental integrity and prevent data leakage, a strict partition wa
     \item \textbf{Unseen Holdout Set:} 200 distinct facial images (100 Real, 100 Fake) drawn from the untouched benchmark test directory to assess out-of-distribution generalization.
 \end{itemize}
 SHA-256 and difference-hashing (dHash) audits verified that no duplicate images crossed between splits.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\columnwidth]{experimental_workflow.png}
+\caption{Flowchart of the complete experimental and evaluation methodology, illustrating dataset partition, stochastic compression-aware training, multi-regime testing, threshold optimization, and statistical validation aligning with Table I, Table II, and Table III.}
+\label{fig:workflow}
+\end{figure}
 
 \subsection{Multi-Condition Compression Regimes}
 To replicate transmission conditions across social media networks, the test images were evaluated across six distinct regimes:
@@ -250,6 +252,7 @@ QF20  & Baseline (EfficientNet-B3) & 95.50\% & 96.00\% & 95.05\% & 95.52\% & 5 &
 \end{tabular}
 \end{table*}
 
+\FloatBarrier
 \section{Results and Discussions}
 
 \subsection{Multi-Regime Compression Performance}
@@ -259,14 +262,14 @@ On pristine, uncompressed imagery, the proposed architecture improves accuracy f
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/accuracy_vs_qf.png}
+\includegraphics[width=\columnwidth]{accuracy_vs_qf.png}
 \caption{Classification accuracy comparison between Baseline EfficientNet-B3 and Proposed Coord-EfficientNet-B3 across varying JPEG compression quality factors.}
 \label{fig:acc_curve}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/error_breakdown.png}
+\includegraphics[width=\columnwidth]{error_breakdown.png}
 \caption{Breakdown of False Positive (FP) and False Negative (FN) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
 \label{fig:error_breakdown}
 \end{figure}
@@ -288,7 +291,7 @@ To evaluate model robustness on unseen subjects, an additional holdout benchmark
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/sample_faces.png}
+\includegraphics[width=\columnwidth]{sample_faces.png}
 \caption{Representative sample facial portraits from the benchmark dataset evaluated under compression: authentic human faces from FFHQ (top) and synthetic faces from StyleGAN (bottom).}
 \label{fig:samples}
 \end{figure}
