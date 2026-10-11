@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\graphicspath{{figures/}{./}}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
@@ -92,7 +93,7 @@ While effective in general vision tasks, standard attention formulations present
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=\textwidth]{figures/architecture_block_diagram.png}
+\includegraphics[width=\textwidth]{architecture_block_diagram.pdf}
 \caption{Detailed architectural block diagram of the proposed Coord-EfficientNet-B3 framework, showing the EfficientNet-B3 feature extractor, the Coordinate Attention module with orthogonal 1D pooling, and the multi-stage classifier head.}
 \label{fig:arch}
 \end{figure*}
