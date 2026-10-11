@@ -10,6 +10,8 @@
 \usepackage{booktabs}
 \usepackage{url}
 \raggedbottom
+\setcounter{dbltopnumber}{2}
+\renewcommand{\dbltopfraction}{0.90}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -69,10 +71,10 @@ To resolve this limitation, we introduce Coord EfficientNet B3, integrating Coor
 
 The primary contributions of this work are summarized as follows:
 \begin{enumerate}
-    \item We design Coord EfficientNet B3, an attention enhanced architecture that integrates Coordinate Attention into the final stage of EfficientNet B3 to preserve directional manipulation traces with minimal parameter overhead.
-    \item We implement a stochastic compression aware training routine that exposes the backbone to randomized lossy JPEG quality factors, encouraging the network to learn compression invariant forensic representations.
-    \item We execute an extensive evaluation across 12,000 inferences spanning six compression quality tiers, establishing that the proposed framework cuts total compressed errors by 14.4\% and reduces false positives by 24.2\% ($p = 0.00116$, McNemar test) compared to the standard EfficientNet B3 baseline \cite{deepa2026enhanced}.
-    \item We benchmark an independent holdout of 200 unseen facial portraits across all six compression tiers, demonstrating a 49.1\% reduction in total misclassifications and a 50.0\% reduction in false negatives at the standard decision threshold.
+    \item We design Coord-EfficientNet-B3, embedding Coordinate Attention into the final stage of EfficientNet-B3 to capture directional manipulation boundaries with negligible parameter overhead.
+    \item We introduce a stochastic compression-aware training pipeline that exposes the backbone to randomized JPEG quality factors, learning compression-invariant representations.
+    \item Across 12,000 multi-quality factor evaluations, the proposed architecture cuts compressed errors by 14.4\% and suppresses false positives by 24.2\% ($p = 0.00116$, McNemar test) relative to the baseline EfficientNet-B3 \cite{deepa2026enhanced}.
+    \item On an unseen holdout of 200 facial portraits, the model reduces total misclassifications by 49.1\% and halves false negatives at the standard threshold $\tau = 0.50$.
 \end{enumerate}
 
 \section{Related Work}
@@ -190,30 +192,22 @@ Evaluating 2,000 test images across six conditions produces 12,000 total inferen
 \end{figure}
 
 \subsection{Evaluation Metrics}
-To evaluate detection efficacy and operational reliability under compression, models are assessed across standard confusion matrix metrics: True Positives ($TP$), True Negatives ($TN$), False Positives ($FP$), and False Negatives ($FN$), where synthetic faces denote the positive class ($1$) and authentic faces denote the negative class ($0$).
-\begin{itemize}
-    \item \textbf{Accuracy ($Acc$):} Overall proportion of correct classifications, computed as $Acc = (TP + TN) / (TP + TN + FP + FN)$.
-    \item \textbf{Precision ($Prec$) and Recall ($Rec$):} Precision measures alarm reliability, $Prec = TP / (TP + FP)$, while Recall measures manipulation detection coverage, $Rec = TP / (TP + FN)$.
-    \item \textbf{F1-Score ($F_1$):} Harmonic mean balancing precision and recall: $F_1 = 2 \cdot Prec \cdot Rec / (Prec + Rec)$.
-    \item \textbf{Matthews Correlation Coefficient ($MCC$):} Balanced correlation metric incorporating all four confusion matrix quadrants, producing values in $[-1, 1]$ where $+1$ signifies perfect prediction:
-    \begin{equation}
-    MCC = \frac{TP \times TN - FP \times FN}{\sqrt{(TP + FP)(TP + FN)(TN + FP)(TN + FN)}}
-    \end{equation}
-    \item \textbf{ROC-AUC:} Area Under the Receiver Operating Characteristic curve, evaluating threshold-agnostic discriminative separation across operating thresholds $\tau \in [0, 1]$.
-\end{itemize}
-In security-critical deepfake screening, False Negatives ($FN$) represent severe operational vulnerability (malicious deepfakes escaping detection), whereas False Positives ($FP$) represent user inconvenience. Evaluating $MCC$ alongside error distributions provides a balanced view of operational reliability.
+To evaluate detection efficacy and operational reliability under compression, models are assessed across standard confusion matrix metrics: True Positives ($TP$), True Negatives ($TN$), False Positives ($FP$), and False Negatives ($FN$), where synthetic faces denote the positive class ($1$) and authentic faces denote the negative class ($0$). Performance is quantified via:
+\begin{equation}
+Acc = \frac{TP + TN}{TP + TN + FP + FN}, \quad F_1 = \frac{2 \cdot Prec \cdot Rec}{Prec + Rec}
+\end{equation}
+\begin{equation}
+Prec = \frac{TP}{TP + FP}, \qquad Rec = \frac{TP}{TP + FN}
+\end{equation}
+\begin{equation}
+MCC = \frac{TP \times TN - FP \times FN}{\sqrt{(TP + FP)(TP + FN)(TN + FP)(TN + FN)}}
+\end{equation}
+Area Under the Receiver Operating Characteristic curve (ROC-AUC) additionally evaluates threshold-agnostic discriminative separation across operating thresholds $\tau \in [0, 1]$. In security-critical deepfake screening, False Negatives ($FN$) represent severe operational vulnerability (malicious deepfakes escaping detection), whereas False Positives ($FP$) represent user inconvenience. Evaluating $MCC$ alongside error distributions provides a balanced view of operational reliability.
 
 \subsection{Implementation Details and Training Configuration}
-All models were implemented in PyTorch using the timm library and trained on a dedicated system equipped with an NVIDIA GeForce RTX 3050 Laptop GPU (4\,GB GDDR6, 75W TGP), an AMD Ryzen 5 5600H CPU (6 cores, 12 threads), and 16\,GB DDR4 system RAM. Computations utilized CUDA 12.4 with PyTorch Automatic Mixed Precision (AMP, \texttt{torch.amp.autocast}) to maximize training efficiency within GPU memory limits.
+All models were implemented in PyTorch using the \texttt{timm} library and trained on an NVIDIA GeForce RTX 3050 Laptop GPU (4\,GB GDDR6, 75W TGP) paired with an AMD Ryzen 5 5600H CPU (6 cores, 12 threads) and 16\,GB DDR4 RAM under CUDA 12.4 with PyTorch Automatic Mixed Precision (AMP). Input face crops were resized from native $256 \times 256$ resolution to $224 \times 224$ pixels and normalized using ImageNet statistics ($\mu = [0.485, 0.456, 0.406]$, $\sigma = [0.229, 0.224, 0.225]$). Training utilized random horizontal flipping ($p = 0.50$), random rotation ($\pm 10^\circ$), and stochastic JPEG compression ($p_{\text{jpeg}} = 0.50$, QF $\in \{20, 40, 50, 60, 80\}$). Optimization minimized Binary Cross-Entropy with Logits loss via Adam ($\eta = 10^{-4}$, mini-batch size $B = 16$), balancing stochastic gradient regularization with 4\,GB VRAM constraints.
 
-Input facial images were resized from $256 \times 256$ to $224 \times 224$ pixels and normalized using ImageNet channel statistics ($\mu = [0.485, 0.456, 0.406]$, $\sigma = [0.229, 0.224, 0.225]$). Training data were augmented with random horizontal flips ($p = 0.50$), random rotations ($\pm 10^\circ$), and stochastic JPEG compression ($p_{\text{jpeg}} = 0.50$, QF $\in \{20, 40, 50, 60, 80\}$). Optimization minimized the Binary Cross-Entropy with Logits loss objective using the Adam optimizer with learning rate $\eta = 10^{-4}$ and mini-batch size $B = 16$. The batch size of 16 provides balanced gradient regularization while strictly adhering to the 4\,GB VRAM budget.
-
-Training followed a structured two-stage transfer learning schedule across a total of 10 epochs:
-\begin{itemize}
-    \item \textbf{Stage 1 (Warmup Phase, Epochs 1--2):} The pretrained EfficientNet-B3 backbone was frozen ($\nabla \theta_{\text{backbone}} = 0$), optimizing exclusively the randomly initialized Coordinate Attention module and classification head. This stabilizes newly added parameters and prevents large initial loss gradients from disrupting pretrained ImageNet representations (mitigating catastrophic forgetting).
-    \item \textbf{Stage 2 (Fine-Tuning Phase, Epochs 3--10):} All backbone and attention layers were unfrozen for end-to-end joint fine-tuning at $\eta = 10^{-4}$. In line with deepfake detection literature \cite{deepa2026enhanced}, 10 epochs achieve full loss convergence ($\mathcal{L} < 0.05$) without overfitting to training identities.
-\end{itemize}
-Validation accuracy was monitored after each epoch on the 800-image clean validation split, and the checkpoint achieving peak accuracy was preserved for frozen evaluation. Random seeds were fixed to 42 across Python, NumPy, PyTorch, and cuDNN backends to ensure complete experimental reproducibility.
+Training followed a structured two-stage transfer learning schedule across 10 epochs. In Stage 1 (warmup, epochs 1--2), the EfficientNet-B3 backbone was frozen ($\nabla \theta_{\text{backbone}} = 0$) while optimizing the randomly initialized Coordinate Attention module and classification head. This warmup stabilizes newly added parameters without disrupting pretrained ImageNet representations (mitigating catastrophic forgetting). In Stage 2 (fine-tuning, epochs 3--10), all layers were jointly unfrozen at $\eta = 10^{-4}$ for end-to-end optimization. Following deepfake detection literature \cite{deepa2026enhanced}, 10 epochs achieve complete convergence ($\mathcal{L} < 0.05$) without overfitting to training identities. Validation accuracy was monitored after each epoch on the 800-image clean validation split, preserving the peak-accuracy checkpoint for frozen evaluation. Experiments used fixed random seed 42 across all libraries.
 
 \section{Results and Discussions}
 
@@ -255,45 +249,6 @@ QF20  & Baseline (EfficientNet-B3) & 94.80\% & 96.09\% & 93.40\% & 94.73\% & 0.8
 \end{tabular}
 \end{table*}
 
-On pristine, uncompressed imagery, the proposed architecture improves accuracy from 97.40\% to 97.80\%, reducing misclassifications from 52 to 44 (-15.4\%). When lossy compression is introduced, the accuracy advantage of the proposed model becomes more pronounced. As depicted in Fig. \ref{fig:acc_curve}, while both models experience accuracy degradation under lower quality factors, the performance drop for the baseline model is substantially steeper. At QF20, the baseline accuracy drops to 94.80\% with 104 total errors, whereas Coord-EfficientNet-B3 preserves 95.85\% accuracy with 83 errors, representing an error reduction of 20.2\%.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.86\columnwidth]{accuracy_vs_qf.png}
-\caption{Classification accuracy comparison between Baseline EfficientNet-B3 and Proposed Coord-EfficientNet-B3 across varying JPEG compression quality factors.}
-\label{fig:acc_curve}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.86\columnwidth]{error_breakdown.png}
-\caption{Breakdown of False Positive (FP) and False Negative (FN) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
-\label{fig:error_breakdown}
-\end{figure}
-
-Aggregated across the 10,000 compressed test evaluations (QF80 through QF20), the proposed framework delivers notable improvements:
-\begin{itemize}
-    \item Overall misclassifications drop from 354 to 303, achieving an aggregate error reduction of 14.4\%.
-    \item False positive errors decrease from 128 to 97, achieving a 24.2\% reduction in false alarms.
-    \item False negative errors decline from 226 to 206, representing an 8.8\% reduction in missed synthetic faces.
-    \item Matthews Correlation Coefficient increases from 0.9295 to 0.9397, reflecting greater predictive stability across classes.
-    \item Mean ROC-AUC improves from 0.9931 to 0.9943 under compression, confirming superior threshold-agnostic discriminative separation.
-\end{itemize}
-
-Fig. \ref{fig:error_breakdown} illustrates the distribution of false positives and false negatives across each quality factor. Under mild to moderate compression (QF80, QF60, QF50), the baseline produces noticeable spikes in false positives (reaching 36 at QF50), caused by convolutional filters registering high-frequency DCT boundary transitions as synthetic edges. In contrast, Coordinate Attention limits false positives to 25 at QF50 and 10 at QF80.
-
-To establish statistical significance, a paired McNemar test was conducted over the 10,000 paired compressed predictions. The contingency table indicates 9,540 concordant correct classifications, 246 concordant incorrect classifications, 157 instances where Coord-EfficientNet-B3 was correct while Baseline failed, and 57 instances where Baseline was correct while Coord-EfficientNet-B3 failed. The resulting test statistic is $\chi^2 = 10.55$, corresponding to a two-tailed $p$-value of $p = 0.00116$. Because $p < 0.01$, the performance superiority of the proposed framework over the standard EfficientNet-B3 baseline is statistically significant.
-
-\subsection{Generalization on Unseen Pure Facial Holdout}
-To evaluate model robustness on unseen subjects, an additional holdout benchmark of 200 face portraits was evaluated across all six compression conditions, yielding 1,200 inference runs. Representative sample facial portraits evaluated under this protocol are illustrated in Fig. \ref{fig:samples}, and the quantitative results are summarized in Table \ref{tab:holdout}.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.82\columnwidth]{sample_faces.png}
-\caption{Representative sample facial portraits from the benchmark dataset evaluated under compression: authentic human faces from FFHQ (top) and synthetic faces from StyleGAN (bottom).}
-\label{fig:samples}
-\end{figure}
-
 \begin{table*}[t]
 \caption{Evaluation on Unseen Pure Facial Holdout Dataset Across Multi-QF Regimes ($\tau = 0.50$)}
 \label{tab:holdout}
@@ -328,6 +283,45 @@ QF20  & Baseline (EfficientNet-B3) & 95.50\% & 96.00\% & 95.05\% & 95.52\% & 5 &
 \bottomrule
 \end{tabular}
 \end{table*}
+
+On pristine, uncompressed imagery, the proposed architecture improves accuracy from 97.40\% to 97.80\%, reducing misclassifications from 52 to 44 (-15.4\%). When lossy compression is introduced, the accuracy advantage of the proposed model becomes more pronounced. As depicted in Fig. \ref{fig:acc_curve}, while both models experience accuracy degradation under lower quality factors, the performance drop for the baseline model is substantially steeper. At QF20, the baseline accuracy drops to 94.80\% with 104 total errors, whereas Coord-EfficientNet-B3 preserves 95.85\% accuracy with 83 errors, representing an error reduction of 20.2\%.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.96\columnwidth]{accuracy_vs_qf.png}
+\caption{Classification accuracy comparison between Baseline EfficientNet-B3 and Proposed Coord-EfficientNet-B3 across varying JPEG compression quality factors.}
+\label{fig:acc_curve}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.96\columnwidth]{error_breakdown.png}
+\caption{Breakdown of False Positive (FP) and False Negative (FN) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
+\label{fig:error_breakdown}
+\end{figure}
+
+Aggregated across the 10,000 compressed test evaluations (QF80 through QF20), the proposed framework delivers notable improvements:
+\begin{itemize}
+    \item Overall misclassifications drop from 354 to 303, achieving an aggregate error reduction of 14.4\%.
+    \item False positive errors decrease from 128 to 97, achieving a 24.2\% reduction in false alarms.
+    \item False negative errors decline from 226 to 206, representing an 8.8\% reduction in missed synthetic faces.
+    \item Matthews Correlation Coefficient increases from 0.9295 to 0.9397, reflecting greater predictive stability across classes.
+    \item Mean ROC-AUC improves from 0.9931 to 0.9943 under compression, confirming superior threshold-agnostic discriminative separation.
+\end{itemize}
+
+Fig. \ref{fig:error_breakdown} illustrates the distribution of false positives and false negatives across each quality factor. Under mild to moderate compression (QF80, QF60, QF50), the baseline produces noticeable spikes in false positives (reaching 36 at QF50), caused by convolutional filters registering high-frequency DCT boundary transitions as synthetic edges. In contrast, Coordinate Attention limits false positives to 25 at QF50 and 10 at QF80.
+
+To establish statistical significance, a paired McNemar test was conducted over the 10,000 paired compressed predictions. The contingency table indicates 9,540 concordant correct classifications, 246 concordant incorrect classifications, 157 instances where Coord-EfficientNet-B3 was correct while Baseline failed, and 57 instances where Baseline was correct while Coord-EfficientNet-B3 failed. The resulting test statistic is $\chi^2 = 10.55$, corresponding to a two-tailed $p$-value of $p = 0.00116$. Because $p < 0.01$, the performance superiority of the proposed framework over the standard EfficientNet-B3 baseline is statistically significant.
+
+\subsection{Generalization on Unseen Pure Facial Holdout}
+To evaluate model robustness on unseen subjects, an additional holdout benchmark of 200 face portraits was evaluated across all six compression conditions, yielding 1,200 inference runs. Representative sample facial portraits evaluated under this protocol are illustrated in Fig. \ref{fig:samples}, and the quantitative results are summarized in Table \ref{tab:holdout}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.88\columnwidth]{sample_faces.png}
+\caption{Representative sample facial portraits from the benchmark dataset evaluated under compression: authentic human faces from FFHQ (top) and synthetic faces from StyleGAN (bottom).}
+\label{fig:samples}
+\end{figure}
 
 The proposed Coord-EfficientNet-B3 architecture attains 97.58\% aggregate accuracy across the holdout benchmark, compared to 95.25\% for the baseline. Total errors drop from 57 to 29, corresponding to an overall error reduction of 49.1\%. Notably, missed synthetic faces (false negatives) are halved from 22 to 11 (-50.0\%), while false alarms drop from 35 to 18 (-48.6\%). This demonstrates that the directional coordinate pooling mechanism generalizes effectively to unseen facial anatomies without overfitting to training identities.
 
