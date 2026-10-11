@@ -43,8 +43,8 @@ def generate_workflow_drawio_xml(output_path):
         </mxCell>
 
         <!-- 4. Stochastic Training: Rectangle (Process) -->
-        <mxCell id="node_train" value="&lt;b&gt;Stochastic Compression-Aware Training&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;&lt;b&gt;Models:&lt;/b&gt; Baseline (EfficientNet-B3) &amp;amp; Proposed (Coord-EfficientNet-B3)&lt;br&gt;p&lt;sub&gt;jpeg&lt;/sub&gt; = 0.50, QF &amp;isin; {20, 40, 50, 60, 80}, Adam (&amp;eta; = 10&lt;sup&gt;-4&lt;/sup&gt;), BCE Loss&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="250" y="270" width="400" height="62" as="geometry"/>
+        <mxCell id="node_train" value="&lt;b&gt;Stochastic Compression-Aware Training&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;&lt;b&gt;Models:&lt;/b&gt; Baseline (EfficientNet-B3) &amp;amp; Proposed (Coord-EfficientNet-B3)&lt;br&gt;&lt;b&gt;Training:&lt;/b&gt; 10 Epochs (2 Frozen Warmup + 8 Fine-Tuning) &amp;nbsp;|&amp;nbsp; Batch Size B = 16&lt;br&gt;p&lt;sub&gt;jpeg&lt;/sub&gt; = 0.50, QF &amp;isin; {20, 40, 50, 60, 80}, Adam (&amp;eta; = 10&lt;sup&gt;-4&lt;/sup&gt;), BCE Loss&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=1.8;fontSize=10;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="235" y="265" width="430" height="72" as="geometry"/>
         </mxCell>
 
         <!-- Arrow: Hygiene -> Train -->
@@ -252,14 +252,15 @@ def generate_workflow_png(output_path):
         "SHA-256 & dHash Verified Deduplication | Disjoint Identities",
         "Train: 7,200 | Val: 800 (Clean) | Test: 2,000 | Holdout: 200"
     ], '#FFF8E1', '#FFA000')
-    draw_arrow(50, 88.5, 50, 84)
+    draw_arrow(50, 88.5, 50, 85.0)
 
     # 4. Stochastic Compression-Aware Training
-    draw_card(18, 75, 64, 9, "Stochastic Compression-Aware Training", [
+    draw_card(14, 73.5, 72, 11.5, "Stochastic Compression-Aware Training", [
         "Models: Baseline (EfficientNet-B3) & Proposed (Coord-EfficientNet-B3)",
+        "Training: 10 Epochs (2 Frozen Warmup + 8 Fine-Tuning)  |  Batch Size B = 16",
         "p_jpeg = 0.50, QF ∈ {20, 40, 50, 60, 80}, Adam (lr = 1e-4), BCE Loss"
     ], '#E8F5E9', '#2E7D32')
-    draw_arrow(50, 75, 50, 70)
+    draw_arrow(50, 73.5, 50, 70.0)
 
     # 5. Benchmark Decision: Diamond
     draw_diamond(50, 65, 24, 9.5, "Benchmark", "Regime?", '#E3F2FD', '#1976D2')
