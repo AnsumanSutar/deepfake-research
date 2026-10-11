@@ -90,12 +90,12 @@ While effective in general vision tasks, standard attention formulations present
 
 \section{Proposed Methodology}
 
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\columnwidth]{figures/architecture_block_diagram.png}
+\includegraphics[width=\textwidth]{figures/architecture_block_diagram.png}
 \caption{Detailed architectural block diagram of the proposed Coord-EfficientNet-B3 framework, showing the EfficientNet-B3 feature extractor, the Coordinate Attention module with orthogonal 1D pooling, and the multi-stage classifier head.}
 \label{fig:arch}
-\end{figure}
+\end{figure*}
 
 The overall pipeline of the proposed \textbf{Coord-EfficientNet-B3} architecture is illustrated in Fig. \ref{fig:arch}. The framework comprises three core stages: (1) deep feature extraction via an EfficientNet-B3 backbone \cite{tan2019efficientnet}, (2) directional feature refinement through Coordinate Attention \cite{hou2021coordinate}, and (3) a multi-stage classification head producing the posterior probability.
 
