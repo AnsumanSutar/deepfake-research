@@ -158,7 +158,7 @@ Training uses the Adam optimizer with learning rate $\eta = 10^{-4}$ and mini-ba
 The end-to-end experimental workflow is summarized in Fig. \ref{fig:workflow}.
 
 \subsection{Benchmark Dataset and Partitioning Protocol}
-Experimental investigations were conducted on the 140,000 facial image benchmark repository. The authentic class comprises human facial portraits from Flickr-Faces-HQ (FFHQ), while the synthetic class consists of high-resolution artificial faces synthesized by NVIDIA StyleGAN.
+Experimental investigations were conducted on the open-access 140,000 facial image benchmark repository from Kaggle \cite{kaggle140k}. The authentic class comprises human facial portraits from Flickr-Faces-HQ (FFHQ), while the synthetic class consists of high-resolution artificial faces synthesized by NVIDIA StyleGAN \cite{karras2019style}.
 
 To ensure experimental integrity and prevent data leakage, a strict partition was constructed:
 \begin{itemize}
@@ -188,6 +188,29 @@ Evaluating 2,000 test images across six conditions produces 12,000 total inferen
 \label{fig:workflow}
 \end{figure}
 
+\subsection{Evaluation Metrics}
+To evaluate detection efficacy and operational safety under compression, models are assessed across standard metrics derived from the confusion matrix: True Positives ($TP$), True Negatives ($TN$), False Positives ($FP$), and False Negatives ($FN$). In this formulation, synthetic faces denote the positive class ($1$), while authentic faces denote the negative class ($0$).
+\begin{itemize}
+    \item \textbf{Accuracy ($Acc$):} Overall proportion of correctly identified samples:
+    \begin{equation}
+    Acc = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+    \item \textbf{Precision ($Prec$) and Recall ($Rec$):} Precision measures alarm reliability, while Recall (Sensitivity) measures the detection coverage of manipulated faces:
+    \begin{equation}
+    Prec = \frac{TP}{TP + FP}, \quad Rec = \frac{TP}{TP + FN}
+    \end{equation}
+    \item \textbf{F1 Score ($F_1$):} Harmonic mean balancing precision and recall:
+    \begin{equation}
+    F_1 = \frac{2 \times Prec \times Rec}{Prec + Rec}
+    \end{equation}
+    \item \textbf{Matthews Correlation Coefficient ($MCC$):} A balanced measure that incorporates all four confusion matrix quadrants, producing values in $[-1, 1]$ where $+1$ signifies perfect prediction:
+    \begin{equation}
+    MCC = \frac{TP \times TN - FP \times FN}{\sqrt{(TP + FP)(TP + FN)(TN + FP)(TN + FN)}}
+    \end{equation}
+    \item \textbf{ROC-AUC:} Area Under the Receiver Operating Characteristic curve, computing discriminative ranking ability across all operating thresholds $\tau \in [0, 1]$.
+\end{itemize}
+In security-critical deepfake screening, False Negatives ($FN$) represent severe operational vulnerability (malicious deepfakes escaping detection), whereas False Positives ($FP$) represent user inconvenience. Evaluating $MCC$ and error trade-offs provides a balanced view of operational reliability.
+
 \subsection{Implementation Details}
 All models were implemented in PyTorch using the timm library. Training was executed on an NVIDIA GeForce RTX 3050 Ti Laptop GPU. Images were resized to $224 \times 224$ and normalized using ImageNet channel statistics. Evaluation was conducted in strict inference mode with deterministic seeds.
 
@@ -201,32 +224,32 @@ Table \ref{tab:master} presents the quantitative results across all six compress
 \label{tab:master}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{4.5pt}
+\setlength{\tabcolsep}{3.8pt}
 \renewcommand{\arraystretch}{0.92}
-\begin{tabular}{llccccccccc}
+\begin{tabular}{llcccccccccc}
 \toprule
-\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{MCC} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error $\Delta$} \\
+\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{MCC} & \textbf{ROC-AUC} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error $\Delta$} \\
 \midrule
-Clean & Baseline (EfficientNet-B3) & 97.40\% & 98.57\% & 96.20\% & 97.37\% & 0.9483 & 14 & 38 & 52 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.80\%} & \textbf{98.78\%} & \textbf{96.80\%} & \textbf{97.78\%} & \textbf{0.9562} & \textbf{12} & \textbf{32} & \textbf{44} & \textbf{-8 (-15.4\%)} \\
+Clean & Baseline (EfficientNet-B3) & 97.40\% & 98.57\% & 96.20\% & 97.37\% & 0.9483 & 0.9949 & 14 & 38 & 52 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.80\%} & \textbf{98.78\%} & \textbf{96.80\%} & \textbf{97.78\%} & \textbf{0.9562} & \textbf{0.9965} & \textbf{12} & \textbf{32} & \textbf{44} & \textbf{-8 (-15.4\%)} \\
 \midrule
-QF80  & Baseline (EfficientNet-B3) & 97.20\% & 98.36\% & 96.00\% & 97.17\% & 0.9443 & 16 & 40 & 56 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.65\%} & \textbf{98.97\%} & \textbf{96.30\%} & \textbf{97.62\%} & \textbf{0.9533} & \textbf{10} & \textbf{37} & \textbf{47} & \textbf{-9 (-16.1\%)} \\
+QF80  & Baseline (EfficientNet-B3) & 97.20\% & 98.36\% & 96.00\% & 97.17\% & 0.9443 & 0.9950 & 16 & 40 & 56 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.65\%} & \textbf{98.97\%} & \textbf{96.30\%} & \textbf{97.62\%} & \textbf{0.9533} & \textbf{0.9958} & \textbf{10} & \textbf{37} & \textbf{47} & \textbf{-9 (-16.1\%)} \\
 \midrule
-QF60  & Baseline (EfficientNet-B3) & 97.40\% & 97.98\% & \textbf{96.80\%} & 97.38\% & 0.9481 & 20 & \textbf{32} & 52 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.55\%} & \textbf{98.57\%} & 96.50\% & \textbf{97.52\%} & \textbf{0.9512} & \textbf{14} & 35 & \textbf{49} & \textbf{-3 (-5.8\%)} \\
+QF60  & Baseline (EfficientNet-B3) & 97.40\% & 97.98\% & \textbf{96.80\%} & 97.38\% & 0.9481 & 0.9942 & 20 & \textbf{32} & 52 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.55\%} & \textbf{98.57\%} & 96.50\% & \textbf{97.52\%} & \textbf{0.9512} & \textbf{0.9960} & \textbf{14} & 35 & \textbf{49} & \textbf{-3 (-5.8\%)} \\
 \midrule
-QF50  & Baseline (EfficientNet-B3) & 96.65\% & 96.42\% & \textbf{96.90\%} & 96.66\% & 0.9330 & 36 & \textbf{31} & 67 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.15\%} & \textbf{97.48\%} & 96.80\% & \textbf{97.14\%} & \textbf{0.9430} & \textbf{25} & 32 & \textbf{57} & \textbf{-10 (-14.9\%)} \\
+QF50  & Baseline (EfficientNet-B3) & 96.65\% & 96.42\% & \textbf{96.90\%} & 96.66\% & 0.9330 & 0.9934 & 36 & \textbf{31} & 67 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.15\%} & \textbf{97.48\%} & 96.80\% & \textbf{97.14\%} & \textbf{0.9430} & \textbf{0.9954} & \textbf{25} & 32 & \textbf{57} & \textbf{-10 (-14.9\%)} \\
 \midrule
-QF40  & Baseline (EfficientNet-B3) & 96.25\% & 98.13\% & 94.30\% & 96.18\% & 0.9257 & 18 & 57 & 75 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{96.65\%} & \textbf{98.34\%} & \textbf{94.90\%} & \textbf{96.59\%} & \textbf{0.9336} & \textbf{16} & \textbf{51} & \textbf{67} & \textbf{-8 (-10.7\%)} \\
+QF40  & Baseline (EfficientNet-B3) & 96.25\% & 98.13\% & 94.30\% & 96.18\% & 0.9257 & 0.9937 & 18 & 57 & 75 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{96.65\%} & \textbf{98.34\%} & \textbf{94.90\%} & \textbf{96.59\%} & \textbf{0.9336} & \textbf{0.9944} & \textbf{16} & \textbf{51} & \textbf{67} & \textbf{-8 (-10.7\%)} \\
 \midrule
-QF20  & Baseline (EfficientNet-B3) & 94.80\% & 96.09\% & 93.40\% & 94.73\% & 0.8964 & 38 & 66 & 104 & --- \\
-      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{95.85\%} & \textbf{96.74\%} & \textbf{94.90\%} & \textbf{95.81\%} & \textbf{0.9172} & \textbf{32} & \textbf{51} & \textbf{83} & \textbf{-21 (-20.2\%)} \\
+QF20  & Baseline (EfficientNet-B3) & 94.80\% & 96.09\% & 93.40\% & 94.73\% & 0.8964 & 0.9891 & 38 & 66 & 104 & --- \\
+      & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{95.85\%} & \textbf{96.74\%} & \textbf{94.90\%} & \textbf{95.81\%} & \textbf{0.9172} & \textbf{0.9901} & \textbf{32} & \textbf{51} & \textbf{83} & \textbf{-21 (-20.2\%)} \\
 \midrule
-\textbf{Compressed Total} & Baseline (EfficientNet-B3) & 96.46\% & 97.40\% & 95.48\% & 96.43\% & 0.9295 & 128 & 226 & 354 & --- \\
-\textbf{(10,000 runs)}     & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{96.97\%} & \textbf{98.02\%} & \textbf{95.88\%} & \textbf{96.94\%} & \textbf{0.9397} & \textbf{97} & \textbf{206} & \textbf{303} & \textbf{-51 (-14.4\%)} \\
+\textbf{Compressed Total} & Baseline (EfficientNet-B3) & 96.46\% & 97.40\% & 95.48\% & 96.43\% & 0.9295 & 0.9931 & 128 & 226 & 354 & --- \\
+\textbf{(10,000 runs)}     & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{96.97\%} & \textbf{98.02\%} & \textbf{95.88\%} & \textbf{96.94\%} & \textbf{0.9397} & \textbf{0.9943} & \textbf{97} & \textbf{206} & \textbf{303} & \textbf{-51 (-14.4\%)} \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -253,6 +276,7 @@ Aggregated across the 10,000 compressed test evaluations (QF80 through QF20), th
     \item False positive errors decrease from 128 to 97, achieving a 24.2\% reduction in false alarms.
     \item False negative errors decline from 226 to 206, representing an 8.8\% reduction in missed synthetic faces.
     \item Matthews Correlation Coefficient increases from 0.9295 to 0.9397, reflecting greater predictive stability across classes.
+    \item Mean ROC-AUC improves from 0.9931 to 0.9943 under compression, confirming superior threshold-agnostic discriminative separation.
 \end{itemize}
 
 Fig. \ref{fig:error_breakdown} illustrates the distribution of false positives and false negatives across each quality factor. Under mild to moderate compression (QF80, QF60, QF50), the baseline produces noticeable spikes in false positives (reaching 36 at QF50), caused by convolutional filters registering high-frequency DCT boundary transitions as synthetic edges. In contrast, Coordinate Attention limits false positives to 25 at QF50 and 10 at QF80.
@@ -348,7 +372,7 @@ While the proposed framework shows substantial robustness improvements, two limi
 \section{Conclusion and Future Work}
 This paper introduced Coord-EfficientNet-B3, an attention enhanced deep learning architecture designed for robust deepfake detection under lossy social media compression. By decomposing spatial attention into orthogonal one dimensional horizontal and vertical coordinate representations, the proposed model captures localized manipulation boundaries while filtering out spurious Discrete Cosine Transform block ringing. Across 12,000 multi-quality factor evaluations, the framework reduced overall compressed classification errors by 14.4\% and suppressed false positives by 24.2\% ($p = 0.00116$, McNemar test) compared to the unaugmented baseline. On an unseen holdout benchmark of 200 facial portraits, the architecture halved missed synthetic faces (-50.0\% false negatives) and reduced total errors by 49.1\%. Furthermore, probability distribution analysis confirmed that coordinate attention prevents confidence drift under severe compression. Future investigations will explore integrating spatio-temporal coordinate attention into video forensic backbones and evaluating performance against emerging diffusion-based generative models.
 
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 
 \bibitem{goodfellow2014generative}
 I.~Goodfellow, J.~Pouget-Abadie, M.~Mirza, B.~Xu, D.~Warde-Farley, S.~Ozair, A.~Courville, and Y.~Bengio, ``Generative adversarial nets,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~27, 2014, pp. 2672--2680.
@@ -394,6 +418,9 @@ S.~Woo, J.~Park, J.-Y. Lee, and I.~S. Kweon, ``CBAM: Convolutional block attenti
 
 \bibitem{hou2021coordinate}
 Q.~Hou, D.~Zhou, and J.~Feng, ``Coordinate attention for efficient mobile network design,'' in \emph{Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR)}, 2021, pp. 13\,713--13\,722.
+
+\bibitem{kaggle140k}
+Kaggle, ``140k Real and Fake Faces Dataset,'' \url{https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces}, 2020.
 
 \end{thebibliography}
 
