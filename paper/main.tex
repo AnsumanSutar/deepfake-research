@@ -84,12 +84,15 @@ Afchar et al. \cite{afchar2018mesonet} developed MesoNet, utilizing compact conv
 \subsection{Robustness Under Social Media Compression}
 The vulnerability of deep neural classifiers to image compression is widely acknowledged in multimedia forensics. JPEG compression divides an image into $8 \times 8$ pixel grids, applies the Discrete Cosine Transform, and quantizes frequency coefficients \cite{verdoliva2020media}. R{\"o}ssler et al. \cite{rossler2019faceforensics} demonstrated on the FaceForensics++ benchmark that models trained exclusively on pristine imagery experience steep performance degradations when evaluated on compressed videos. Bondi et al. \cite{bondi2020training} confirmed that incorporating data augmentation during training enhances classification stability. However, standard convolutional filters remain susceptible to confounding block boundary artifacts with authentic tampering edges when compression quality is low.
 
+Furthermore, frequency-domain forensic detectors that rely on global spectral anomalies \cite{wang2020cnn} suffer severe attenuation under social media transcoding. Coarse quantization matrices actively eliminate the high-frequency spectral peaks characteristic of convolutional decoders, rendering pure frequency analysis unreliable under lossy conditions. Conversely, purely spatial forensic techniques that inspect local pixel incongruities \cite{chai2020what} often mistake compression-induced blocking edges for authentic splicing boundaries. Consequently, an effective forensic detector must decouple structural manipulation traces from periodic grid noise.
+
 \subsection{Attention Mechanisms in Deep Networks}
 Attention mechanisms enable convolutional networks to emphasize salient feature locations while suppressing irrelevant background signals. Hu et al. \cite{hu2018squeeze} introduced Squeeze-and-Excitation (SE) networks, computing channel-wise modulation weights via global average pooling. Woo et al. \cite{woo2018cbam} proposed the Convolutional Block Attention Module (CBAM), combining channel and spatial attention sequentially.
 
-While effective in general vision tasks, standard attention formulations present distinct drawbacks in compressed forensic scenarios. SE pooling removes spatial coordinate information completely \cite{hou2021coordinate}. Standard two dimensional spatial attention captures broad spatial regions without directional selectivity, making it susceptible to locking onto repetitive two dimensional JPEG grid edges. Hou et al. \cite{hou2021coordinate} overcame these challenges with Coordinate Attention, which factorizes spatial pooling into orthogonal horizontal and vertical one dimensional feature vectors. This design captures position sensitive forensic signatures with negligible computational overhead, providing directional resilience against compression artifacts.
+While effective in general vision tasks, standard attention formulations present distinct drawbacks in compressed forensic scenarios. SE pooling removes spatial coordinate information completely by collapsing entire channels into single scalar values \cite{hou2021coordinate}. Standard two-dimensional spatial attention mechanisms, such as those in CBAM, capture broad spatial receptive fields without directional selectivity, making them prone to locking onto repetitive two-dimensional JPEG grid edges. Hou et al. \cite{hou2021coordinate} overcame these challenges with Coordinate Attention, which factorizes spatial pooling into orthogonal horizontal and vertical one-dimensional feature vectors. This design captures position-sensitive forensic signatures with negligible computational overhead, providing directional resilience against compression artifacts.
 
-\section{Proposed Methodology}
+\subsection{Forensic Synthesis and Motivation}
+Despite the conceptual promise of direction-aware feature aggregation, existing deep learning frameworks for facial forgery detection \cite{deepa2026enhanced} have largely relied on unaugmented backbones that lack explicit coordinate sensitivity. When subjected to aggressive lossy compression regimes commonly encountered across modern social media platforms, such architectures exhibit severe confidence degradation and high false alarm rates. These operational limitations motivate the proposed Coord-EfficientNet-B3 framework, which pairs directional Coordinate Attention with stochastic compression-aware training to establish robust, compression-invariant forensic representations.
 
 \begin{figure*}[!t]
 \centering
@@ -97,6 +100,8 @@ While effective in general vision tasks, standard attention formulations present
 \caption{Detailed architectural block diagram of the proposed Coord-EfficientNet-B3 framework, showing the EfficientNet-B3 feature extractor, the Coordinate Attention module with orthogonal 1D pooling, and the multi-stage classifier head.}
 \label{fig:arch}
 \end{figure*}
+
+\section{Proposed Methodology}
 
 The overall pipeline of the proposed \textbf{Coord-EfficientNet-B3} architecture is illustrated in Fig. \ref{fig:arch}. The framework comprises three core stages: (1) deep feature extraction via an EfficientNet-B3 backbone \cite{tan2019efficientnet}, (2) directional feature refinement through Coordinate Attention \cite{hou2021coordinate}, and (3) a multi-stage classification head producing the posterior probability.
 
@@ -178,7 +183,7 @@ Evaluating 2,000 test images across six conditions produces 12,000 total inferen
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{experimental_workflow.png}
+\includegraphics[width=0.88\columnwidth]{experimental_workflow.png}
 \caption{Flowchart of the complete experimental and evaluation methodology, illustrating dataset partition, stochastic compression-aware training, multi-regime testing, threshold optimization, and statistical validation aligning with Table I, Table II, and Table III.}
 \label{fig:workflow}
 \end{figure}
@@ -195,6 +200,9 @@ Table \ref{tab:master} presents the quantitative results across all six compress
 \caption{Comprehensive Benchmark Across Multi-QF Compression Regimes ($\tau = 0.50$)}
 \label{tab:master}
 \centering
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{0.92}
 \begin{tabular}{llccccccccc}
 \toprule
 \textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{MCC} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error $\Delta$} \\
@@ -227,14 +235,14 @@ On pristine, uncompressed imagery, the proposed architecture improves accuracy f
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{accuracy_vs_qf.png}
+\includegraphics[width=0.86\columnwidth]{accuracy_vs_qf.png}
 \caption{Classification accuracy comparison between Baseline EfficientNet-B3 and Proposed Coord-EfficientNet-B3 across varying JPEG compression quality factors.}
 \label{fig:acc_curve}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{error_breakdown.png}
+\includegraphics[width=0.86\columnwidth]{error_breakdown.png}
 \caption{Breakdown of False Positive (FP) and False Negative (FN) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
 \label{fig:error_breakdown}
 \end{figure}
@@ -252,12 +260,22 @@ Fig. \ref{fig:error_breakdown} illustrates the distribution of false positives a
 To establish statistical significance, a paired McNemar test was conducted over the 10,000 paired compressed predictions. The contingency table indicates 9,540 concordant correct classifications, 246 concordant incorrect classifications, 157 instances where Coord-EfficientNet-B3 was correct while Baseline failed, and 57 instances where Baseline was correct while Coord-EfficientNet-B3 failed. The resulting test statistic is $\chi^2 = 10.55$, corresponding to a two-tailed $p$-value of $p = 0.00116$. Because $p < 0.01$, the performance superiority of the proposed framework over the standard EfficientNet-B3 baseline is statistically significant.
 
 \subsection{Generalization on Unseen Pure Facial Holdout}
-To evaluate model robustness on unseen subjects, an additional holdout benchmark of 200 face portraits was evaluated across all six compression conditions, yielding 1,200 inference runs. The results are presented in Table \ref{tab:holdout}, and representative sample facial portraits evaluated under this protocol are illustrated in Fig. \ref{fig:samples}.
+To evaluate model robustness on unseen subjects, an additional holdout benchmark of 200 face portraits was evaluated across all six compression conditions, yielding 1,200 inference runs. Representative sample facial portraits evaluated under this protocol are illustrated in Fig. \ref{fig:samples}, and the quantitative results are summarized in Table \ref{tab:holdout}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\columnwidth]{sample_faces.png}
+\caption{Representative sample facial portraits from the benchmark dataset evaluated under compression: authentic human faces from FFHQ (top) and synthetic faces from StyleGAN (bottom).}
+\label{fig:samples}
+\end{figure}
 
 \begin{table*}[t]
 \caption{Evaluation on Unseen Pure Facial Holdout Dataset Across Multi-QF Regimes ($\tau = 0.50$)}
 \label{tab:holdout}
 \centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
 \begin{tabular}{llcccccccc}
 \toprule
 \textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Recall} & \textbf{Precision} & \textbf{F1 Score} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error Reduction} \\
@@ -286,13 +304,6 @@ QF20  & Baseline (EfficientNet-B3) & 95.50\% & 96.00\% & 95.05\% & 95.52\% & 5 &
 \end{tabular}
 \end{table*}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{sample_faces.png}
-\caption{Representative sample facial portraits from the benchmark dataset evaluated under compression: authentic human faces from FFHQ (top) and synthetic faces from StyleGAN (bottom).}
-\label{fig:samples}
-\end{figure}
-
 The proposed Coord-EfficientNet-B3 architecture attains 97.58\% aggregate accuracy across the holdout benchmark, compared to 95.25\% for the baseline. Total errors drop from 57 to 29, corresponding to an overall error reduction of 49.1\%. Notably, missed synthetic faces (false negatives) are halved from 22 to 11 (-50.0\%), while false alarms drop from 35 to 18 (-48.6\%). This demonstrates that the directional coordinate pooling mechanism generalizes effectively to unseen facial anatomies without overfitting to training identities.
 
 \subsection{Decision Threshold Sensitivity Analysis}
@@ -302,6 +313,9 @@ In real world forensic investigations, the operational penalty of failing to det
 \caption{Decision Threshold Sensitivity on Compressed Test Set}
 \label{tab:threshold}
 \centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.95}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cccccc}
 \toprule
