@@ -1,182 +1,130 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2026-10-11T11:35:00.000Z" agent="Antigravity" version="21.0.0" type="device">
+<mxfile host="app.diagrams.net" agent="Antigravity">
   <diagram id="coord-efficientnet-b3" name="Coord-EfficientNet-B3 Architecture">
-    <mxGraphModel dx="1600" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="900" background="#FFFFFF">
+    <mxGraphModel dx="592" dy="303" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
       <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-
-        <!-- Title -->
-        <mxCell id="title" value="&lt;b&gt;Coord-EfficientNet-B3: Proposed DeepFake Detection Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#1A237E;" vertex="1" parent="1">
-          <mxGeometry x="450" y="25" width="650" height="30" as="geometry"/>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#1A237E;" value="&lt;b&gt;Coord-EfficientNet-B3: Proposed DeepFake Detection Architecture&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="650" x="415" y="40" as="geometry" />
         </mxCell>
-
-        <!-- 1. Input Image Block -->
-        <mxCell id="input_box" value="&lt;b&gt;Input Facial Image&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#555555&quot;&gt;RGB Face Crop&lt;br&gt;&lt;b&gt;224 &amp;times; 224 &amp;times; 3&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;fontSize=11.5;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="30" y="220" width="130" height="90" as="geometry"/>
+        <mxCell id="input_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;fontSize=11.5;fontFamily=Helvetica;" value="&lt;b&gt;Input Facial Image&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#555555&quot;&gt;RGB Face Crop&lt;br&gt;&lt;b&gt;224 &amp;times; 224 &amp;times; 3&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="130" x="30" y="197" as="geometry" />
         </mxCell>
-
-        <!-- 2. Backbone Feature Extractor -->
-        <mxCell id="backbone_box" value="&lt;b&gt;EfficientNet-B3 Backbone&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#424242&quot;&gt;ImageNet Pre-trained&lt;br&gt;Stem + MBConv Stages 1&amp;ndash;7&lt;br&gt;&lt;b style=&quot;color:#1A237E;&quot;&gt;Output Feature Map:&lt;br&gt;F &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 7&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3F51B5;strokeWidth=2;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="200" y="205" width="170" height="120" as="geometry"/>
+        <mxCell id="backbone_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3F51B5;strokeWidth=2;fontSize=11;fontFamily=Helvetica;" value="&lt;b&gt;EfficientNet-B3 Backbone&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#424242&quot;&gt;ImageNet Pre-trained&lt;br&gt;Stem + MBConv Stages 1&amp;ndash;7&lt;br&gt;&lt;b style=&quot;color:#1A237E;&quot;&gt;Output Feature Map:&lt;br&gt;F &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 7&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="170" x="200" y="182" as="geometry" />
         </mxCell>
-
-        <!-- Arrow: Input -> Backbone -->
-        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="input_box" target="backbone_box">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="edge1" edge="1" parent="1" source="input_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;endFill=1;" target="backbone_box">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
-        <!-- 3. Coordinate Attention Group (Container) -->
-        <mxCell id="coord_container" value="&lt;b style=&quot;font-size: 13px; color: #004D40;&quot;&gt;Proposed Coordinate Attention (CoordAtt) Module&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=10;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="410" y="90" width="670" height="350" as="geometry"/>
+        <mxCell id="coord_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=10;fontFamily=Helvetica;" value="&lt;b style=&quot;font-size: 13px; color: #004D40;&quot;&gt;Proposed Coordinate Attention (CoordAtt) Module&lt;/b&gt;" vertex="1">
+          <mxGeometry height="290" width="670" x="410" y="90" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3A: X-AvgPool (Horizontal 1D) -->
-        <mxCell id="pool_h" value="&lt;b&gt;X-AvgPool (1D)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Pool Width W &amp;rarr; 1&lt;br&gt;&lt;b&gt;z&lt;sup&gt;h&lt;/sup&gt;&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 1&lt;/sup&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" vertex="1" parent="1">
-          <mxGeometry x="435" y="140" width="130" height="65" as="geometry"/>
+        <mxCell id="pool_h" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" value="&lt;b&gt;X-AvgPool (1D)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Pool Width W &amp;rarr; 1&lt;br&gt;&lt;b&gt;z&lt;sup&gt;h&lt;/sup&gt;&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 1&lt;/sup&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="130" x="435" y="140" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3B: Y-AvgPool (Vertical 1D) -->
-        <mxCell id="pool_w" value="&lt;b&gt;Y-AvgPool (1D)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Pool Height H &amp;rarr; 1&lt;br&gt;&lt;b&gt;z&lt;sup&gt;w&lt;/sup&gt;&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 1 &amp;times; 7&lt;/sup&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" vertex="1" parent="1">
-          <mxGeometry x="435" y="280" width="130" height="65" as="geometry"/>
+        <mxCell id="pool_w" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" value="&lt;b&gt;Y-AvgPool (1D)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Pool Height H &amp;rarr; 1&lt;br&gt;&lt;b&gt;z&lt;sup&gt;w&lt;/sup&gt;&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 1 &amp;times; 7&lt;/sup&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="130" x="435" y="280" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3C: Shared 1x1 Conv + BN + Hard-Swish -->
-        <mxCell id="shared_conv" value="&lt;b&gt;Concat &amp;amp; Shared 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Batch Normalization&lt;br&gt;Hard-Swish Activation&lt;br&gt;Reduction Ratio r = 32&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;1536 &amp;rarr; 48 channels&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" vertex="1" parent="1">
-          <mxGeometry x="605" y="200" width="150" height="85" as="geometry"/>
+        <mxCell id="shared_conv" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10.5;" value="&lt;b&gt;Concat &amp;amp; Shared 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Batch Normalization&lt;br&gt;Hard-Swish Activation&lt;br&gt;Reduction Ratio r = 32&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;1536 &amp;rarr; 48 channels&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="85" width="150" x="605" y="200" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3D: Split & Sigmoid (H) -->
-        <mxCell id="conv_h" value="&lt;b&gt;Horizontal 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Sigmoid Activation&lt;br&gt;48 &amp;rarr; 1536 channels&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;g&lt;sup&gt;h&lt;/sup&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 1&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="795" y="140" width="135" height="65" as="geometry"/>
+        <mxCell id="conv_h" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10;" value="&lt;b&gt;Horizontal 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Sigmoid Activation&lt;br&gt;48 &amp;rarr; 1536 channels&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;g&lt;sup&gt;h&lt;/sup&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 1&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="135" x="795" y="140" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3E: Split & Sigmoid (W) -->
-        <mxCell id="conv_w" value="&lt;b&gt;Vertical 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Sigmoid Activation&lt;br&gt;48 &amp;rarr; 1536 channels&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;g&lt;sup&gt;w&lt;/sup&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 1 &amp;times; 7&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="795" y="280" width="135" height="65" as="geometry"/>
+        <mxCell id="conv_w" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00897B;strokeWidth=1.5;fontSize=10;" value="&lt;b&gt;Vertical 1&amp;times;1 Conv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Sigmoid Activation&lt;br&gt;48 &amp;rarr; 1536 channels&lt;br&gt;&lt;b style=&quot;color:#00796B;&quot;&gt;g&lt;sup&gt;w&lt;/sup&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 1 &amp;times; 7&lt;/sup&gt;&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="135" x="795" y="280" as="geometry" />
         </mxCell>
-
-        <!-- Sub 3F: Feature Modulation (Multiplication) - Placed at FAR RIGHT of CoordAtt -->
-        <mxCell id="mod_box" value="&lt;b&gt;Feature Modulation&lt;/b&gt;&lt;br&gt;&lt;font size=&quot;3&quot;&gt;&lt;b&gt;&amp;otimes;&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;b style=&quot;color:#1B5E20;&quot;&gt;Y = F &amp;otimes; g&lt;sup&gt;h&lt;/sup&gt; &amp;otimes; g&lt;sup&gt;w&lt;/sup&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#2E7D32&quot;&gt;Y &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 7&lt;/sup&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="965" y="205" width="100" height="75" as="geometry"/>
+        <mxCell id="mod_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=11;" value="&lt;b&gt;Feature Modulation&lt;/b&gt;&lt;br&gt;&lt;font size=&quot;3&quot;&gt;&lt;b&gt;&amp;otimes;&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;b style=&quot;color:#1B5E20;&quot;&gt;Y = F &amp;otimes; g&lt;sup&gt;h&lt;/sup&gt; &amp;otimes; g&lt;sup&gt;w&lt;/sup&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#2E7D32&quot;&gt;Y &amp;isin; &amp;reals;&lt;sup&gt;1536 &amp;times; 7 &amp;times; 7&lt;/sup&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="965" y="195" as="geometry" />
         </mxCell>
-
-        <!-- Clear Left-to-Right Arrows inside CoordAtt -->
-        <!-- F splits to pool_h and pool_w -->
-        <mxCell id="edge_f_to_h" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.8;endArrow=classic;" edge="1" parent="1" source="backbone_box" target="pool_h">
+        <mxCell id="edge_f_to_h" edge="1" parent="1" source="backbone_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.8;endArrow=classic;" target="pool_h">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_f_to_w" edge="1" parent="1" source="backbone_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.8;endArrow=classic;" target="pool_w">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_poolh_to_shared" edge="1" parent="1" source="pool_h" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="shared_conv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_poolw_to_shared" edge="1" parent="1" source="pool_w" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="shared_conv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_shared_to_h" edge="1" parent="1" source="shared_conv" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="conv_h">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_shared_to_w" edge="1" parent="1" source="shared_conv" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="conv_w">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_gh_to_mod" edge="1" parent="1" source="conv_h" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="mod_box">
           <mxGeometry relative="1" as="geometry">
-            <Array points="390" y="265"/>
-            <Array points="390" y="172"/>
+            <Array as="points">
+              <mxPoint x="945" y="172.5" />
+              <mxPoint x="945" y="240" />
+            </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="edge_f_to_w" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.8;endArrow=classic;" edge="1" parent="1" source="backbone_box" target="pool_w">
+        <mxCell id="edge_gw_to_mod" edge="1" parent="1" source="conv_w" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="mod_box">
           <mxGeometry relative="1" as="geometry">
-            <Array points="390" y="265"/>
-            <Array points="390" y="312"/>
+            <Array as="points">
+              <mxPoint x="945" y="312.5" />
+              <mxPoint x="945" y="240" />
+            </Array>
           </mxGeometry>
         </mxCell>
-
-        <!-- Pools to Shared Conv -->
-        <mxCell id="edge_poolh_to_shared" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="pool_h" target="shared_conv">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="580" y="172"/>
-            <Array points="580" y="230"/>
+        <mxCell id="edge_f_identity" edge="1" parent="1" source="backbone_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1.8;endArrow=classic;fontSize=9.5;fontColor=#1B5E20;fontStyle=1;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.467;exitY=1.008;exitDx=0;exitDy=0;exitPerimeter=0;" target="mod_box" value="Identity Feature Map F">
+          <mxGeometry relative="1" x="0.0521" y="14" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="279.4" y="333" />
+              <mxPoint x="280" y="358" />
+              <mxPoint x="1015" y="358" />
+            </Array>
+            <mxPoint x="279.5999999999999" y="276" as="sourcePoint" />
+            <mxPoint x="1015" y="259" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="edge_poolw_to_shared" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="pool_w" target="shared_conv">
+        <mxCell id="gap_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;fontSize=11;" value="&lt;b&gt;Global Average&lt;br&gt;Pooling (GAP)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#4A148C&quot;&gt;&lt;b&gt;ȳ&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536&lt;/sup&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="85" width="115" x="1120" y="198" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_mod_to_gap" edge="1" parent="1" source="mod_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" target="gap_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="decision_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;strokeWidth=2;fontSize=10.5;" value="&lt;b&gt;Classification Decision&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;color:#D84315;&quot;&gt;P(Fake | X) = &amp;sigma;(z)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Threshold &amp;tau; = 0.50&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;&amp;tau; &amp;lt; 0.50 &amp;rarr; &lt;b&gt;Real&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#B71C1C&quot;&gt;&amp;tau; &amp;ge; 0.50 &amp;rarr; &lt;b&gt;Fake&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="105" width="145" x="1480" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-8" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="195" width="165" x="1275" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-9" parent="uC6tMWuoHEiQ9NZrZrgs-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=8;fontSize=11;" value="&lt;b style=&quot;color: #B71C1C;&quot;&gt;3-Stage Classifier Head&lt;/b&gt;" vertex="1">
+          <mxGeometry height="195" width="165" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-10" parent="uC6tMWuoHEiQ9NZrZrgs-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" value="Dense 1536 &amp;rarr; 128&lt;br&gt;ReLU + Dropout (0.3)" vertex="1">
+          <mxGeometry height="35" width="135" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-11" parent="uC6tMWuoHEiQ9NZrZrgs-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" value="Dense 128 &amp;rarr; 64&lt;br&gt;ReLU + Dropout (0.2)" vertex="1">
+          <mxGeometry height="35" width="135" x="15" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-12" parent="uC6tMWuoHEiQ9NZrZrgs-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" value="Dense 64 &amp;rarr; 1 (Logit z)" vertex="1">
+          <mxGeometry height="30" width="135" x="15" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-13" edge="1" parent="uC6tMWuoHEiQ9NZrZrgs-8" source="uC6tMWuoHEiQ9NZrZrgs-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="uC6tMWuoHEiQ9NZrZrgs-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-14" edge="1" parent="uC6tMWuoHEiQ9NZrZrgs-8" source="uC6tMWuoHEiQ9NZrZrgs-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" target="uC6tMWuoHEiQ9NZrZrgs-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-15" edge="1" parent="1" source="gap_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uC6tMWuoHEiQ9NZrZrgs-10">
           <mxGeometry relative="1" as="geometry">
-            <Array points="580" y="312"/>
-            <Array points="580" y="255"/>
+            <mxPoint x="1240" y="425" as="sourcePoint" />
+            <mxPoint x="1295" y="390" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-
-        <!-- Shared Conv splits to Conv H and Conv W -->
-        <mxCell id="edge_shared_to_h" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="shared_conv" target="conv_h">
+        <mxCell id="uC6tMWuoHEiQ9NZrZrgs-16" edge="1" parent="1" source="uC6tMWuoHEiQ9NZrZrgs-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="decision_box">
           <mxGeometry relative="1" as="geometry">
-            <Array points="775" y="230"/>
-            <Array points="775" y="172"/>
+            <mxPoint x="1470" y="447" as="sourcePoint" />
+            <mxPoint x="1525" y="380" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="edge_shared_to_w" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="shared_conv" target="conv_w">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="775" y="255"/>
-            <Array points="775" y="312"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- Attention weights feed forward into Modulation Box -->
-        <mxCell id="edge_gh_to_mod" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="conv_h" target="mod_box">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="945" y="172"/>
-            <Array points="945" y="230"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="edge_gw_to_mod" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="conv_w" target="mod_box">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="945" y="312"/>
-            <Array points="945" y="255"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- Clean Residual / Skip Connection for F directly into Modulation Box -->
-        <mxCell id="edge_f_identity" value="Identity Feature Map F" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1.8;endArrow=classic;fontSize=9.5;fontColor=#1B5E20;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="backbone_box" target="mod_box">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="390" y="410"/>
-            <Array points="1015" y="410"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- 4. Global Average Pooling (Clean straight arrow from Modulation) -->
-        <mxCell id="gap_box" value="&lt;b&gt;Global Average&lt;br&gt;Pooling (GAP)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#4A148C&quot;&gt;&lt;b&gt;y&#772;&lt;/b&gt; &amp;isin; &amp;reals;&lt;sup&gt;1536&lt;/sup&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1120" y="200" width="115" height="85" as="geometry"/>
-        </mxCell>
-
-        <!-- Clean straight arrow from CoordAtt Modulation to GAP -->
-        <mxCell id="edge_mod_to_gap" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="mod_box" target="gap_box">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- 5. Classifier Head Container -->
-        <mxCell id="head_container" value="&lt;b style=&quot;color: #B71C1C;&quot;&gt;3-Stage Classifier Head&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;strokeWidth=2;strokeDashed=1;verticalAlign=top;align=center;spacingTop=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1275" y="155" width="165" height="195" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="fc1" value="Dense 1536 &amp;rarr; 128&lt;br&gt;ReLU + Dropout (0.3)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="190" width="135" height="35" as="geometry"/>
-        </mxCell>
-        <mxCell id="fc2" value="Dense 128 &amp;rarr; 64&lt;br&gt;ReLU + Dropout (0.2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="245" width="135" height="35" as="geometry"/>
-        </mxCell>
-        <mxCell id="fc3" value="Dense 64 &amp;rarr; 1 (Logit z)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53935;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="300" width="135" height="30" as="geometry"/>
-        </mxCell>
-
-        <!-- Internal Downward Connecting Arrows in Classifier Head -->
-        <mxCell id="edge_fc1_to_fc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc1" target="fc2">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="edge_fc2_to_fc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.5;endArrow=classic;" edge="1" parent="1" source="fc2" target="fc3">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- Arrow: GAP -> Classifier Head -->
-        <mxCell id="edge_gap_to_head" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="gap_box" target="fc1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- 6. Output Decision Box -->
-        <mxCell id="decision_box" value="&lt;b&gt;Classification Decision&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;color:#D84315;&quot;&gt;P(Fake | X) = &amp;sigma;(z)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;Threshold &amp;tau; = 0.50&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;&amp;tau; &amp;lt; 0.50 &amp;rarr; &lt;b&gt;Real&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#B71C1C&quot;&gt;&amp;tau; &amp;ge; 0.50 &amp;rarr; &lt;b&gt;Fake&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;strokeWidth=2;fontSize=10.5;" vertex="1" parent="1">
-          <mxGeometry x="1480" y="195" width="145" height="105" as="geometry"/>
-        </mxCell>
-
-        <!-- Arrow: FC3 -> Decision -->
-        <mxCell id="edge_fc_to_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="fc3" target="decision_box">
-          <mxGeometry relative="1" as="geometry">
-            <Array points="1450" y="315"/>
-            <Array points="1450" y="247"/>
-          </mxGeometry>
-        </mxCell>
-
       </root>
     </mxGraphModel>
   </diagram>
