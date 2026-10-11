@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-11T13:30:00.000Z" agent="Antigravity" version="21.0.0" type="device">
+  <diagram id="experimental-workflow" name="Experimental Workflow">
+    <mxGraphModel dx="1200" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1020" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- 1. Start: Terminator -->
+        <mxCell id="node_start" value="&lt;b&gt;Start: Experimental Pipeline&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5D4037&quot;&gt;DeepFake Detection under Lossy Compression&lt;/font&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="320" y="25" width="260" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 2. Dataset Ingestion: Parallelogram (Input) -->
+        <mxCell id="node_ingest" value="&lt;b&gt;Dataset Ingestion (140,000 Faces)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5D4037&quot;&gt;Real Faces: FFHQ &amp;nbsp;|&amp;nbsp; Synthetic Faces: StyleGAN&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#F57C00;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="300" y="105" width="300" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Start -> Ingest -->
+        <mxCell id="edge_start_ingest" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_start" target="node_ingest">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 3. Data Hygiene & Partitioning: Rectangle (Process) -->
+        <mxCell id="node_hygiene" value="&lt;b&gt;Data Hygiene &amp;amp; Zero-Leak Partitioning&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#424242&quot;&gt;SHA-256 &amp;amp; dHash Verified Deduplication &amp;nbsp;|&amp;nbsp; Disjoint Identity Splits&lt;br&gt;&lt;b&gt;Train:&lt;/b&gt; 7,200 &amp;nbsp;|&amp;nbsp; &lt;b&gt;Val:&lt;/b&gt; 800 &amp;nbsp;|&amp;nbsp; &lt;b&gt;Test:&lt;/b&gt; 2,000 &amp;nbsp;|&amp;nbsp; &lt;b&gt;Holdout:&lt;/b&gt; 200&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#FFA000;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="270" y="185" width="360" height="58" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Ingest -> Hygiene -->
+        <mxCell id="edge_ingest_hygiene" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_ingest" target="node_hygiene">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 4. Stochastic Training: Rectangle (Process) -->
+        <mxCell id="node_train" value="&lt;b&gt;Stochastic Compression-Aware Training&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;&lt;b&gt;Models:&lt;/b&gt; Baseline (EfficientNet-B3) &amp;amp; Proposed (Coord-EfficientNet-B3)&lt;br&gt;p&lt;sub&gt;jpeg&lt;/sub&gt; = 0.50, QF &amp;isin; {20, 40, 50, 60, 80}, Adam (&amp;eta; = 10&lt;sup&gt;-4&lt;/sup&gt;), BCE Loss&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="250" y="270" width="400" height="62" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Hygiene -> Train -->
+        <mxCell id="edge_hygiene_train" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_hygiene" target="node_train">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 5. Decision: Benchmark Regime? (Diamond) -->
+        <mxCell id="node_bench" value="&lt;b&gt;Benchmark&lt;br&gt;Regime?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1976D2;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="375" y="360" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Train -> Bench -->
+        <mxCell id="edge_train_bench" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_train" target="node_bench">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Branch A: Multi-QF Testing (Table I) -->
+        <mxCell id="branch_test" value="&lt;b&gt;Multi-QF Testing (Table I)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#4A148C&quot;&gt;6 Regimes: Clean, QF80, QF60, QF50, QF40, QF20&lt;br&gt;&lt;b&gt;12,000 Total Inference Evaluations&lt;/b&gt;&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#EDE7F6;strokeColor=#512DA8;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="130" y="465" width="280" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Branch B: Unseen Holdout Testing (Table II) -->
+        <mxCell id="branch_holdout" value="&lt;b&gt;Unseen Holdout Testing (Table II)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#4A148C&quot;&gt;200 Pure Facial Crops (100 Real, 100 Fake)&lt;br&gt;&lt;b&gt;1,200 Inferences Across 6 Regimes&lt;/b&gt;&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#EDE7F6;strokeColor=#512DA8;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="490" y="465" width="280" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Bench -> Branch A -->
+        <mxCell id="edge_bench_test" value="&lt;b&gt;2,000 Test Set&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;fontSize=9.5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="node_bench" target="branch_test">
+          <mxGeometry relative="1" as="geometry">
+            <Array points="270" y="395"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Arrow: Bench -> Branch B -->
+        <mxCell id="edge_bench_holdout" value="&lt;b&gt;200 Holdout&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;fontSize=9.5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="node_bench" target="branch_holdout">
+          <mxGeometry relative="1" as="geometry">
+            <Array points="630" y="395"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. Re-converge: Model Inference -->
+        <mxCell id="node_infer" value="&lt;b&gt;Model Inference &amp;amp; Posterior Probability&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5D4037&quot;&gt;Compute P(Fake | X) = &amp;sigma;(z) &amp;isin; [0, 1] for Both Models&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#FFA000;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="270" y="565" width="360" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Branch A -> Infer -->
+        <mxCell id="edge_test_infer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="branch_test" target="node_infer">
+          <mxGeometry relative="1" as="geometry">
+            <Array points="270" y="545"/>
+            <Array points="390" y="545"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Arrow: Branch B -> Infer -->
+        <mxCell id="edge_holdout_infer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="branch_holdout" target="node_infer">
+          <mxGeometry relative="1" as="geometry">
+            <Array points="630" y="545"/>
+            <Array points="510" y="545"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 7. Decision: Classification Rule (Diamond) -->
+        <mxCell id="node_rule" value="&lt;b&gt;Classification Rule&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#D84315&quot;&gt;P(Fake | X) &amp;ge; &amp;tau;?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#FBC02D;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="360" y="650" width="180" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Infer -> Rule -->
+        <mxCell id="edge_infer_rule" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_infer" target="node_rule">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Rule: No -> Real (0) -->
+        <mxCell id="label_real" value="&lt;b style=&quot;color:#1B5E20;&quot;&gt;Real (0)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;P &amp;lt; &amp;tau;&lt;/font&gt;" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=1.5;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="180" y="660" width="110" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Rule: Yes -> Fake (1) -->
+        <mxCell id="label_fake" value="&lt;b style=&quot;color:#B71C1C;&quot;&gt;Fake (1)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#333333&quot;&gt;P &amp;ge; &amp;tau;&lt;/font&gt;" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;strokeWidth=1.5;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="610" y="660" width="110" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Rule -> Real -->
+        <mxCell id="edge_rule_real" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2E7D32;strokeWidth=1.6;endArrow=classic;fontSize=10;labelBackgroundColor=#FFFFFF;fontColor=#2E7D32;" edge="1" parent="1" source="node_rule" target="label_real">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Rule -> Fake -->
+        <mxCell id="edge_rule_fake" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=1.6;endArrow=classic;fontSize=10;labelBackgroundColor=#FFFFFF;fontColor=#C62828;" edge="1" parent="1" source="node_rule" target="label_fake">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 8. Statistical Validation: Parallelogram (Output) -->
+        <mxCell id="node_stats" value="&lt;b&gt;Statistical Validation &amp;amp; Tabular Results Generation&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#01579B&quot;&gt;&lt;b&gt;Table I:&lt;/b&gt; Multi-QF Benchmark &amp;nbsp;|&amp;nbsp; &lt;b&gt;Table II:&lt;/b&gt; Unseen Holdout (-49.1% Errors)&lt;br&gt;&lt;b&gt;Table III:&lt;/b&gt; Threshold Optimization (&amp;tau; &amp;isin; [0.15, 0.50]) &amp;nbsp;|&amp;nbsp; &lt;b&gt;McNemar Test:&lt;/b&gt; p = 0.00116 (&lt; 0.01)&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=1.8;fontSize=10.5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="200" y="760" width="500" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Rule -> Stats -->
+        <mxCell id="edge_rule_stats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_rule" target="node_stats">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 9. End: Terminator -->
+        <mxCell id="node_end" value="&lt;b&gt;End: Robust Detection Validated&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1B5E20&quot;&gt;14.4% Compressed Error Reduction Confirmed&lt;/font&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=1.8;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="310" y="860" width="280" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: Stats -> End -->
+        <mxCell id="edge_stats_end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#37474F;strokeWidth=1.6;endArrow=classic;" edge="1" parent="1" source="node_stats" target="node_end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
