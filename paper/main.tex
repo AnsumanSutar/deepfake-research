@@ -53,7 +53,7 @@
 \maketitle
 
 \begin{abstract}
-The proliferation of deep generative frameworks enables the automated synthesis of deceptive facial counterfeit media, challenging digital authenticity verification. While baseline Convolutional Neural Network (CNN) architectures---particularly EfficientNet-B3---achieve high classification performance on pristine imagery, their reliability degrades precipitously under lossy social network transmission. Re-encoding pipelines introduce Discrete Cosine Transform (DCT) quantization noise that erases subtle boundary cues while generating misleading block grid artifacts. To address this vulnerability, this study presents Coord-EfficientNet-B3, an attention-guided architecture integrating directional Coordinate Attention (CoordAtt) with stochastic compression-aware training. By decoupling spatial pooling operations into separate horizontal and vertical coordinate vectors, the network captures fine directional manipulation boundaries while attenuating susceptibility to isotropic JPEG compression artifacts. Evaluated across 12,000 multi-condition inference runs spanning varying Quality Factor (QF) levels, Coord-EfficientNet-B3 achieves a 14.4\% net error reduction and decreases false alarms by 24.2\% relative to the unaugmented EfficientNet-B3 baseline ($p = 0.00116$, McNemar test). Furthermore, across an untouched facial holdout benchmark of 200 portraits, the architecture decreases total errors by 49.1\% and halves missed forgeries at the canonical decision threshold.
+The proliferation of deep generative frameworks enables automated synthesis of deceptive facial counterfeit media, challenging digital authenticity verification. While baseline Convolutional Neural Network (CNN) architectures---particularly EfficientNet-B3---achieve high classification performance on pristine imagery, their reliability degrades precipitously under lossy social network transmission. Re-encoding pipelines introduce Discrete Cosine Transform (DCT) quantization noise that erases subtle boundary cues while generating misleading block grid artifacts. To address this vulnerability, this study presents Coord-EfficientNet-B3, an attention-guided architecture integrating directional Coordinate Attention (CoordAtt) with stochastic compression-aware training. By decoupling spatial pooling operations into separate horizontal and vertical coordinate vectors, the network captures fine directional manipulation boundaries while attenuating susceptibility to isotropic JPEG compression artifacts. Evaluated across 12,000 multi-condition inference runs spanning varying Quality Factor (QF) levels, Coord-EfficientNet-B3 achieves a 14.4\% net error reduction and decreases false alarms by 24.2\% relative to the unaugmented baseline ($p = 0.00116$, McNemar test). Across an untouched facial holdout benchmark of 200 portraits, the architecture decreases total errors by 49.1\% and halves missed forgeries at canonical decision threshold $\tau = 0.50$.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -69,20 +69,20 @@ However, an unresolved vulnerability emerges when forensic pipelines process med
 
 To mitigate this vulnerability, this study presents Coord-EfficientNet-B3, embedding CoordAtt \cite{hou2021coordinate} into the EfficientNet-B3 feature extractor coupled with compression-aware stochastic training. Unlike conventional channel attention mechanisms that compress spatial dimensions into a single scalar descriptor \cite{hu2018squeeze}, CoordAtt decouples spatial pooling into orthogonal horizontal and vertical 1D feature maps. This directional factorisation enables the model to encode location-precise manipulation boundaries along one dimension while retaining broad spatial context along the orthogonal axis, effectively preventing forensic feature dissipation across JPEG blocking grids.
 
-The central scientific contributions of this research are summarized as follows:
-\begin{enumerate}
-    \item We formulate Coord-EfficientNet-B3 by embedding a directional CoordAtt block after the terminal feature stage of EfficientNet-B3, isolating fine tampering boundaries with minimal parameter overhead.
-    \item We implement a stochastic compression-aware training pipeline that exposes the backbone to randomized QF augmentations, guiding the network toward compression-invariant feature spaces.
-    \item Across 12,000 multi-condition evaluations, Coord-EfficientNet-B3 reduces compressed classification errors by 14.4\% and curbs false alarms by 24.2\% relative to the unaugmented baseline ($p = 0.00116$, paired McNemar test).
-    \item On an untouched holdout benchmark of 200 facial portraits, the proposed model reduces net errors by 49.1\% and halves missed deepfakes at canonical decision threshold $\tau = 0.50$.
-\end{enumerate}
+The primary contributions of this work are summarized as follows:
+\begin{itemize}
+    \item \textbf{Coord-EfficientNet-B3 Architecture:} Embedding directional CoordAtt into the final stage of EfficientNet-B3 to capture spatial tampering boundaries with negligible parameter overhead.
+    \item \textbf{Compression-Aware Training:} Developing a stochastic pipeline that exposes the backbone to randomized QF augmentations for compression-invariant representations.
+    \item \textbf{Multi-Regime Benchmarking:} Evaluating 12,000 multi-condition inferences, reducing overall errors by 14.4\% and false alarms by 24.2\% ($p = 0.00116$, McNemar test).
+    \item \textbf{Holdout Generalization:} Validating on 200 untouched holdout portraits, lowering net errors by 49.1\% and halving missed deepfakes at canonical threshold $\tau = 0.50$.
+\end{itemize}
 
 \section{Related Work}
 
 \subsection{DeepFake Detection and CNN Backbones}
 Early forensic methodologies relied heavily on handcrafted biological anomalies, such as irregular blink frequencies \cite{li2018ictu}, corneal reflection discrepancies, and head pose inconsistencies \cite{mirsky2021creation}. However, as generative architectures matured \cite{karras2019style}, these explicit physiological imperfections became increasingly imperceptible, compelling researchers to adopt learned visual representations.
 
-Afchar \emph{et al.} \cite{afchar2018mesonet} introduced MesoNet, employing compact convolutional feature extractors to isolate mesoscopic manipulation artifacts. Wang \emph{et al.} \cite{wang2020cnn} highlighted that CNN-generated imagery shares widespread spectral footprints; nonetheless, such frequency signatures degrade rapidly under transcoding. Chai \emph{et al.} \cite{chai2020what} examined localized patch representations, identifying that synthetic faces harbor persistent structural inconsistencies across specific facial landmarks. Tan and Le \cite{tan2019efficientnet} proposed EfficientNet, balancing network depth, width, and resolution via uniform compound scaling. Deepa \emph{et al.} \cite{deepa2026enhanced} adopted EfficientNet-B3 for facial manipulation detection, recording 97.95\% accuracy on pristine data and confirming that learned deep representations substantially outperform manual texture heuristics.
+Afchar \emph{et al.} \cite{afchar2018mesonet} introduced MesoNet, employing compact convolutional feature extractors to isolate mesoscopic manipulation artifacts. Wang \emph{et al.} \cite{wang2020cnn} highlighted that CNN-generated imagery shares widespread spectral footprints; nonetheless, such frequency signatures degrade rapidly under transcoding. Chai \emph{et al.} \cite{chai2020what} identified that synthetic faces harbor persistent structural inconsistencies across specific facial landmarks. Tan and Le \cite{tan2019efficientnet} proposed EfficientNet, balancing network depth, width, and resolution via uniform compound scaling. Deepa \emph{et al.} \cite{deepa2026enhanced} adopted EfficientNet-B3 for facial manipulation detection, recording 97.95\% accuracy on pristine data and confirming that learned deep representations substantially outperform manual heuristics.
 
 \subsection{Robustness Under Social Media Compression}
 The sensitivity of deep vision models to lossy encoding remains a well-documented bottleneck in image forensics. JPEG schemes segment images into $8 \times 8$ pixel tiles, execute DCT transforms, and apply coarse coefficient quantization \cite{verdoliva2020media}. R{\"o}ssler \emph{et al.} \cite{rossler2019faceforensics} demonstrated on FaceForensics++ that forensic networks trained on pristine frames undergo steep accuracy degradation when tested on compressed video streams. Bondi \emph{et al.} \cite{bondi2020training} confirmed that compression-tailored training mitigates performance collapses. Nevertheless, standard convolutional kernels remain vulnerable to mistaking quantization block boundaries for authentic manipulation edges at low quality tiers.
@@ -187,35 +187,41 @@ Evaluating 2,000 test images across six conditions produces 12,000 total inferen
 \end{figure}
 
 \subsection{Evaluation Metrics}
-To assess classification efficacy and operational reliability under compression without relying on generic notation, detection performance is quantified via distinct category tallies. Let $C_{\text{syn}}$ represent the count of correctly detected synthetic faces, $C_{\text{aut}}$ represent correctly identified authentic faces, $E_{\text{alm}}$ denote false alarms where authentic faces are mistakenly flagged as synthetic, and $E_{\text{mis}}$ denote missed forgeries where manipulated faces escape detection. 
+To assess classification efficacy and operational reliability under compression without relying on generic notation, detection performance is quantified using distinct category tallies:
+\begin{itemize}
+    \item $\text{TPos}$: True Positives, representing correctly detected synthetic facial portraits.
+    \item $\text{TNeg}$: True Negatives, representing correctly verified authentic human faces.
+    \item $\text{FPos}$: False Positives (false alarms), where authentic faces are mistakenly flagged as synthetic.
+    \item $\text{FNeg}$: False Negatives (missed forgeries), where manipulated faces escape detection.
+\end{itemize}
 
-Classification Accuracy ($\mathcal{A}_{\text{acc}}$) measures the aggregate proportion of correct decisions:
+Classification Accuracy ($\text{Acc}$) measures the global proportion of correct decisions:
 \begin{equation}
-\mathcal{A}_{\text{acc}} = \frac{C_{\text{syn}} + C_{\text{aut}}}{C_{\text{syn}} + C_{\text{aut}} + E_{\text{alm}} + E_{\text{mis}}}
+\text{Acc} = \frac{\text{TPos} + \text{TNeg}}{\text{TPos} + \text{TNeg} + \text{FPos} + \text{FNeg}}
 \end{equation}
 
-Detection Precision ($\mathcal{P}_{\text{prc}}$) evaluates synthetic alarm fidelity, reflecting resilience against false alarms:
+Detection Precision ($\text{Prec}$) assesses the fidelity of synthetic alarms:
 \begin{equation}
-\mathcal{P}_{\text{prc}} = \frac{C_{\text{syn}}}{C_{\text{syn}} + E_{\text{alm}}}
+\text{Prec} = \frac{\text{TPos}}{\text{TPos} + \text{FPos}}
 \end{equation}
 
-Detection Recall ($\mathcal{R}_{\text{rec}}$) quantifies sensitivity, assessing the capacity to capture manipulated media:
+Detection Recall ($\text{Rec}$) measures sensitivity in identifying manipulated content:
 \begin{equation}
-\mathcal{R}_{\text{rec}} = \frac{C_{\text{syn}}}{C_{\text{syn}} + E_{\text{mis}}}
+\text{Rec} = \frac{\text{TPos}}{\text{TPos} + \text{FNeg}}
 \end{equation}
 
-Harmonic Measure ($\mathcal{F}_{1}$) balances precision fidelity against detection sensitivity:
+Harmonic Score ($\text{F}_1$) reflects the balanced mean between precision and recall:
 \begin{equation}
-\mathcal{F}_{1} = \frac{2 \cdot \mathcal{P}_{\text{prc}} \cdot \mathcal{R}_{\text{rec}}}{\mathcal{P}_{\text{prc}} + \mathcal{R}_{\text{rec}}}
+\text{F}_1 = \frac{2 \cdot \text{Prec} \cdot \text{Rec}}{\text{Prec} + \text{Rec}}
 \end{equation}
 
-Matthews Correlation Coefficient ($\mathcal{M}_{\text{cc}}$) supplies a balanced correlation metric in $[-1, +1]$:
+Matthews Correlation Coefficient ($\text{MCC}$) provides a symmetric quality metric in $[-1, +1]$:
 \begin{equation}
-\mathcal{M}_{\text{cc}} = \frac{(C_{\text{syn}} \cdot C_{\text{aut}}) - (E_{\text{alm}} \cdot E_{\text{mis}})}{\sqrt{(C_{\text{syn}} + E_{\text{alm}})(C_{\text{syn}} + E_{\text{mis}})(C_{\text{aut}} + E_{\text{alm}})(C_{\text{aut}} + E_{\text{mis}})}}
+\text{MCC} = \frac{(\text{TPos} \cdot \text{TNeg}) - (\text{FPos} \cdot \text{FNeg})}{\sqrt{(\text{TPos} + \text{FPos})(\text{TPos} + \text{FNeg})(\text{TNeg} + \text{FPos})(\text{TNeg} + \text{FNeg})}}
 \end{equation}
-which preserves evaluative stability across disparate error ratios.
+which preserves evaluative stability across disparate class and error ratios.
 
-Area Under the Receiver Operating Characteristic curve (ROC-AUC) additionally evaluates threshold-agnostic discriminative separation across operating thresholds $\tau \in [0, 1]$. In security-critical deepfake screening, missed forgeries ($E_{\text{mis}}$, or FN) represent severe operational vulnerability, whereas false alarms ($E_{\text{alm}}$, or FP) inflict user friction. Evaluating $\mathcal{M}_{\text{cc}}$ alongside error distributions provides a balanced view of operational reliability.
+Area Under the Receiver Operating Characteristic curve (ROC-AUC) additionally evaluates threshold-agnostic discriminative separation across operating thresholds $\tau \in [0, 1]$. In security-critical forensic screening, missed manipulations ($\text{FNeg}$) represent severe vulnerabilities, whereas false alarms ($\text{FPos}$) inflict user friction. Evaluating $\text{MCC}$ alongside error distributions provides a balanced view of operational reliability.
 
 \subsection{Implementation Details and Training Configuration}
 Implemented in PyTorch using the \texttt{timm} library, all experiments ran on a system equipped with an NVIDIA GeForce RTX 3050 Laptop Graphics Processing Unit (GPU) (4\,GB GDDR6, 75W Total Graphics Power [TGP]), an AMD Ryzen 5 5600H Central Processing Unit (CPU) (6 cores, 12 threads), and 16\,GB DDR4 Random Access Memory (RAM) under CUDA 12.4 with PyTorch Automatic Mixed Precision (AMP). Input face crops were resized from native $256 \times 256$ to $224 \times 224$ pixels and normalized against domain statistics ($\boldsymbol{\mu} = [0.485, 0.456, 0.406]^\top$, $\boldsymbol{\sigma} = [0.229, 0.224, 0.225]^\top$). Training employed random horizontal flipping ($p = 0.50$), random rotational jitter ($\pm 10^\circ$), and stochastic JPEG compression ($p_{\text{jpeg}} = 0.50$, QF $\in \{20, 40, 50, 60, 80\}$). Optimization minimized Binary Cross-Entropy with Logits loss via Adam ($\eta = 10^{-4}$, mini-batch size $B = 16$), balancing stochastic gradient regularization with 4\,GB VRAM constraints.
@@ -236,7 +242,7 @@ Table \ref{tab:master} presents the quantitative results across all six compress
 \renewcommand{\arraystretch}{0.92}
 \begin{tabular}{llcccccccccc}
 \toprule
-\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{MCC} & \textbf{ROC-AUC} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error $\Delta$} \\
+\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{MCC} & \textbf{ROC-AUC} & \textbf{FPos} & \textbf{FNeg} & \textbf{Errors} & \textbf{Error $\Delta$} \\
 \midrule
 Clean & Baseline (EfficientNet-B3) & 97.40\% & 98.57\% & 96.20\% & 97.37\% & 0.9483 & 0.9949 & 14 & 38 & 52 & --- \\
       & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.80\%} & \textbf{98.78\%} & \textbf{96.80\%} & \textbf{97.78\%} & \textbf{0.9562} & \textbf{0.9965} & \textbf{12} & \textbf{32} & \textbf{44} & \textbf{-8 (-15.4\%)} \\
@@ -271,7 +277,7 @@ QF20  & Baseline (EfficientNet-B3) & 94.80\% & 96.09\% & 93.40\% & 94.73\% & 0.8
 \renewcommand{\arraystretch}{0.92}
 \begin{tabular}{llcccccccc}
 \toprule
-\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Recall} & \textbf{Precision} & \textbf{F1 Score} & \textbf{FP} & \textbf{FN} & \textbf{Errors} & \textbf{Error Reduction} \\
+\textbf{Condition} & \textbf{Model} & \textbf{Accuracy} & \textbf{Recall} & \textbf{Precision} & \textbf{F1 Score} & \textbf{FPos} & \textbf{FNeg} & \textbf{Errors} & \textbf{Error Reduction} \\
 \midrule
 Clean & Baseline (EfficientNet-B3) & 96.00\% & 97.00\% & 95.10\% & 96.04\% & 5 & 3 & 8 & --- \\
       & \textbf{Proposed (Coord-EfficientNet-B3)} & \textbf{97.50\%} & \textbf{98.00\%} & \textbf{97.03\%} & \textbf{97.51\%} & \textbf{3} & \textbf{2} & \textbf{5} & \textbf{-37.5\%} \\
@@ -309,16 +315,16 @@ Under pristine, uncompressed conditions, Coord-EfficientNet-B3 lifts accuracy fr
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.96\columnwidth]{error_breakdown.png}
-\caption{Breakdown of false alarm ($E_{\text{alm}}$) and missed forgery ($E_{\text{mis}}$) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
+\caption{Breakdown of false alarm ($\text{FPos}$) and missed forgery ($\text{FNeg}$) errors across compression quality tiers, illustrating the consistent suppression of false alarms by Coordinate Attention.}
 \label{fig:error_breakdown}
 \end{figure}
 
 Aggregated across the 10,000 compressed test evaluations (QF80 through QF20), the proposed framework delivers notable improvements:
 \begin{itemize}
     \item Overall misclassifications drop from 354 to 303, achieving an aggregate error reduction of 14.4\%.
-    \item False alarm errors ($E_{\text{alm}}$) decrease from 128 to 97, achieving a 24.2\% reduction.
-    \item Missed forgery errors ($E_{\text{mis}}$) decline from 226 to 206, representing an 8.8\% reduction in unflagged synthetic faces.
-    \item Matthews Correlation Coefficient ($\mathcal{M}_{\text{cc}}$) increases from 0.9295 to 0.9397, reflecting greater predictive stability across classes.
+    \item False alarm errors ($\text{FPos}$) decrease from 128 to 97, achieving a 24.2\% reduction.
+    \item Missed forgery errors ($\text{FNeg}$) decline from 226 to 206, representing an 8.8\% reduction in unflagged synthetic faces.
+    \item Matthews Correlation Coefficient ($\text{MCC}$) increases from 0.9295 to 0.9397, reflecting greater predictive stability across classes.
     \item Mean ROC-AUC improves from 0.9931 to 0.9943 under compression, confirming superior threshold-agnostic discriminative separation.
 \end{itemize}
 
@@ -339,7 +345,7 @@ To evaluate model robustness on unseen subjects, an additional holdout benchmark
 The proposed Coord-EfficientNet-B3 architecture attains 97.58\% aggregate accuracy across the holdout benchmark, compared to 95.25\% for the baseline. Total errors drop from 57 to 29, corresponding to an overall error reduction of 49.1\%. Notably, missed synthetic faces are halved from 22 to 11 (-50.0\%), while false alarms drop from 35 to 18 (-48.6\%). This demonstrates that the directional coordinate pooling mechanism generalizes effectively to unseen facial anatomies without overfitting to training identities.
 
 \subsection{Decision Threshold Sensitivity Analysis}
-In real world forensic investigations, the operational penalty of failing to detect a malicious deepfake (missed forgery $E_{\text{mis}}$) is typically far higher than the cost of a false alarm ($E_{\text{alm}}$). In such scenarios, adjusting the decision threshold $\tau$ enables practitioners to enforce high-recall regimes. Table \ref{tab:threshold} reports error trade-offs across five operational thresholds on the 5,000 compressed test instances.
+In real world forensic investigations, the operational penalty of failing to detect a malicious deepfake (missed forgery $\text{FNeg}$) is typically far higher than the cost of a false alarm ($\text{FPos}$). In such scenarios, adjusting the decision threshold $\tau$ enables practitioners to enforce high-recall regimes. Table \ref{tab:threshold} reports error trade-offs across five operational thresholds on the 5,000 compressed test instances.
 
 \begin{table}[!t]
 \caption{Decision Threshold Sensitivity on Compressed Test Set}
@@ -351,7 +357,7 @@ In real world forensic investigations, the operational penalty of failing to det
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cccccc}
 \toprule
-$\tau$ & \textbf{Base FN} & \textbf{Coord FN} & \textbf{Base FP} & \textbf{Coord FP} & \textbf{Coord Recall} \\
+$\tau$ & \textbf{Base FNeg} & \textbf{Coord FNeg} & \textbf{Base FPos} & \textbf{Coord FPos} & \textbf{Coord Rec} \\
 \midrule
 0.50 & 226 & \textbf{206} & 128 & \textbf{97} & 95.88\% \\
 0.46 & 215 & \textbf{196} & 142 & \textbf{111} & 96.08\% \\
@@ -363,7 +369,7 @@ $\tau$ & \textbf{Base FN} & \textbf{Coord FN} & \textbf{Base FP} & \textbf{Coord
 }
 \end{table}
 
-As shown in Table \ref{tab:threshold}, lowering $\tau$ from 0.50 to 0.35 decreases false negatives in Coord-EfficientNet-B3 from 206 to 176 (-14.6\%), lifting recall to 96.48\% while maintaining fewer total false alarms (140~FP) than the baseline at $\tau = 0.46$~(142~FP). In a high-security regime ($\tau = 0.15$), false negatives in the proposed model decline to 123 (97.54\% recall). Importantly, while the baseline incurs 342 false positives at $\tau = 0.15$, CoordAtt restricts false alarms to 238 (a reduction of 104 false positives), demonstrating that coordinate pooling helps suppress false alarm proliferation when prioritizing recall.
+As shown in Table \ref{tab:threshold}, lowering $\tau$ from 0.50 to 0.35 decreases false negatives in Coord-EfficientNet-B3 from 206 to 176 (-14.6\%), lifting recall to 96.48\% while maintaining fewer total false alarms (140~$\text{FPos}$) than the baseline at $\tau = 0.46$~(142~$\text{FPos}$). In a high-security regime ($\tau = 0.15$), false negatives in the proposed model decline to 123 (97.54\% recall). Importantly, while the baseline incurs 342 false positives at $\tau = 0.15$, CoordAtt restricts false alarms to 238 (a reduction of 104 false positives), demonstrating that coordinate pooling helps suppress false alarm proliferation when prioritizing recall.
 
 \subsection{Probability Distribution and Confidence Drift Analysis}
 Analyzing output posterior probability distributions reveals underlying failure modes under heavy compression. On pristine images, both models produce sharp, bimodal probability distributions: authentic images yield probabilities tightly clustered around $P(\text{Fake}) \in [0.00, 0.05]$, while synthetic images cluster near $P(\text{Fake}) \in [0.95, 1.00]$.
@@ -381,55 +387,22 @@ While the proposed framework shows substantial robustness improvements, two limi
 This paper introduced Coord-EfficientNet-B3, an attention-enhanced deep learning architecture designed for robust deepfake detection under lossy social media compression. By factorizing spatial attention into orthogonal 1D coordinate representations, the proposed model captures localized manipulation boundaries while filtering out spurious DCT block ringing. Across 12,000 multi-quality factor evaluations, the framework reduced overall compressed classification errors by 14.4\% and suppressed false alarms by 24.2\% ($p = 0.00116$, McNemar test) compared to the unaugmented baseline. On an unseen holdout benchmark of 200 facial portraits, the architecture halved missed synthetic faces (-50.0\%) and reduced total errors by 49.1\%. Furthermore, probability distribution analysis confirmed that coordinate attention prevents confidence drift under severe compression. Future investigations will explore integrating spatio-temporal coordinate attention into video forensic backbones and evaluating performance against emerging diffusion-based generative models.
 
 \begin{thebibliography}{16}
-
-\bibitem{goodfellow2014generative}
-I.~Goodfellow \emph{et al.}, ``Generative adversarial nets,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~27, pp. 2672--2680, 2014.
-
-\bibitem{karras2019style}
-T.~Karras, S.~Laine, and T.~Aila, ``A style-based generator architecture for generative adversarial networks,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 4401--4410, 2019.
-
-\bibitem{mirsky2021creation}
-Y.~Mirsky and W.~Lee, ``The creation and detection of deepfakes: A survey,'' \emph{ACM Comput. Surv.}, vol.~54, no.~1, pp. 1--36, 2021.
-
-\bibitem{tan2019efficientnet}
-M.~Tan and Q.~V. Le, ``EfficientNet: Rethinking model scaling for convolutional neural networks,'' in \emph{Proc. ICML}, pp. 6105--6114, 2019.
-
-\bibitem{deepa2026enhanced}
-B.~G. Deepa \emph{et al.}, ``An enhanced deep learning framework for DeepFake detection using EfficientNet-B3: comparative evaluation of deep and machine learning techniques,'' \emph{Discov. Comput.}, vol.~29, no.~1, p. 18, 2026.
-
-\bibitem{verdoliva2020media}
-L.~Verdoliva, ``Media forensics for digital authenticity: Technologies, challenges, and perspectives,'' \emph{IEEE Access}, vol.~8, pp. 182\,390--182\,410, 2020.
-
-\bibitem{rossler2019faceforensics}
-A.~R{\"o}ssler \emph{et al.}, ``FaceForensics++: Learning to detect manipulated facial images,'' in \emph{Proc. IEEE/CVF ICCV}, pp. 1--11, 2019.
-
-\bibitem{bondi2020training}
-L.~Bondi \emph{et al.}, ``Training strategies and data augmentations in CNN-based deepfake video detection,'' in \emph{Proc. IEEE WIFS}, pp. 1--6, 2020.
-
-\bibitem{wang2020cnn}
-S.-Y. Wang \emph{et al.}, ``CNN-generated images are surprisingly easy to spot... for now,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 8695--8704, 2020.
-
-\bibitem{chai2020what}
-L.~Chai \emph{et al.}, ``What makes fake images detectable? Understanding properties of synthetic images,'' in \emph{Proc. ECCV}, pp. 97--113, 2020.
-
-\bibitem{li2018ictu}
-Y.~Li, M.-C. Chang, and S.~Lyu, ``In ictu oculi: Exposing AI-generated fake face videos by detecting eye blinking,'' in \emph{Proc. IEEE WIFS}, pp. 1--7, 2018.
-
-\bibitem{afchar2018mesonet}
-D.~Afchar \emph{et al.}, ``MesoNet: A compact facial video forgery detection network,'' in \emph{Proc. IEEE WIFS}, pp. 1--7, 2018.
-
-\bibitem{hu2018squeeze}
-J.~Hu, L.~Shen, and G.~Sun, ``Squeeze-and-excitation networks,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 7132--7141, 2018.
-
-\bibitem{woo2018cbam}
-S.~Woo \emph{et al.}, ``CBAM: Convolutional block attention module,'' in \emph{Proc. ECCV}, pp. 3--19, 2018.
-
-\bibitem{hou2021coordinate}
-Q.~Hou, D.~Zhou, and J.~Feng, ``Coordinate attention for efficient mobile network design,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 13\,713--13\,722, 2021.
-
-\bibitem{kaggle140k}
-Kaggle, ``140k real and fake faces dataset,'' online repository, \url{https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces}, 2020.
-
+\bibitem{goodfellow2014generative} I.~Goodfellow \emph{et al.}, ``Generative adversarial nets,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~27, pp. 2672--2680, 2014.
+\bibitem{karras2019style} T.~Karras, S.~Laine, and T.~Aila, ``A style-based generator architecture for generative adversarial networks,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 4401--4410, 2019.
+\bibitem{mirsky2021creation} Y.~Mirsky and W.~Lee, ``The creation and detection of deepfakes: A survey,'' \emph{ACM Comput. Surv.}, vol.~54, no.~1, pp. 1--36, 2021.
+\bibitem{tan2019efficientnet} M.~Tan and Q.~V. Le, ``EfficientNet: Rethinking model scaling for convolutional neural networks,'' in \emph{Proc. ICML}, pp. 6105--6114, 2019.
+\bibitem{deepa2026enhanced} B.~G. Deepa \emph{et al.}, ``An enhanced deep learning framework for DeepFake detection using EfficientNet-B3: comparative evaluation of deep and machine learning techniques,'' \emph{Discov. Comput.}, vol.~29, no.~1, p. 18, 2026.
+\bibitem{verdoliva2020media} L.~Verdoliva, ``Media forensics for digital authenticity: Technologies, challenges, and perspectives,'' \emph{IEEE Access}, vol.~8, pp. 182\,390--182\,410, 2020.
+\bibitem{rossler2019faceforensics} A.~R{\"o}ssler \emph{et al.}, ``FaceForensics++: Learning to detect manipulated facial images,'' in \emph{Proc. IEEE/CVF ICCV}, pp. 1--11, 2019.
+\bibitem{bondi2020training} L.~Bondi \emph{et al.}, ``Training strategies and data augmentations in CNN-based deepfake video detection,'' in \emph{Proc. IEEE WIFS}, pp. 1--6, 2020.
+\bibitem{wang2020cnn} S.-Y. Wang \emph{et al.}, ``CNN-generated images are surprisingly easy to spot... for now,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 8695--8704, 2020.
+\bibitem{chai2020what} L.~Chai \emph{et al.}, ``What makes fake images detectable? Understanding properties of synthetic images,'' in \emph{Proc. ECCV}, pp. 97--113, 2020.
+\bibitem{li2018ictu} Y.~Li, M.-C. Chang, and S.~Lyu, ``In ictu oculi: Exposing AI-generated fake face videos by detecting eye blinking,'' in \emph{Proc. IEEE WIFS}, pp. 1--7, 2018.
+\bibitem{afchar2018mesonet} D.~Afchar \emph{et al.}, ``MesoNet: A compact facial video forgery detection network,'' in \emph{Proc. IEEE WIFS}, pp. 1--7, 2018.
+\bibitem{hu2018squeeze} J.~Hu, L.~Shen, and G.~Sun, ``Squeeze-and-excitation networks,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 7132--7141, 2018.
+\bibitem{woo2018cbam} S.~Woo \emph{et al.}, ``CBAM: Convolutional block attention module,'' in \emph{Proc. ECCV}, pp. 3--19, 2018.
+\bibitem{hou2021coordinate} Q.~Hou, D.~Zhou, and J.~Feng, ``Coordinate attention for efficient mobile network design,'' in \emph{Proc. IEEE/CVF CVPR}, pp. 13\,713--13\,722, 2021.
+\bibitem{kaggle140k} Kaggle, ``140k real and fake faces dataset,'' online repository, \url{https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces}, 2020.
 \end{thebibliography}
 
 \end{document}
