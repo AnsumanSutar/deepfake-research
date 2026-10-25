@@ -153,7 +153,11 @@ During training, input images are augmented with stochastic JPEG compression wit
 
 Model parameters are trained by minimizing the empirical binary log-loss over mini-batches of size $B = 16$:
 \begin{equation}
-\mathcal{L}_{\text{CE}} = \frac{1}{B} \sum_{i=1}^B \ell(y_i, \hat{p}_i), \quad \text{where} \quad \ell(y, \hat{p}) = - \left[ y \ln(\hat{p}) + (1 - y) \ln(1 - \hat{p}) \right]
+\mathcal{L}_{\text{CE}} = \frac{1}{B} \sum_{i=1}^B \ell(y_i, \hat{p}_i)
+\end{equation}
+where the sample-level loss $\ell(y, \hat{p})$ is computed as:
+\begin{equation}
+\ell(y, \hat{p}) = - \left[ y \ln(\hat{p}) + (1 - y) \ln(1 - \hat{p}) \right]
 \end{equation}
 with predicted probability $\hat{p}_i = \sigma(z_i)$ and reference class label $y_i \in \{0, 1\}$. Optimization is driven by Adam with learning rate $\eta = 10^{-4}$. Complete parameter settings, transfer learning schedules, and computational specifications are detailed in Section IV-D.
 
@@ -223,7 +227,11 @@ The $\text{F}_1$ measure quantifies the harmonic trade-off linking precision wit
 
 Matthews Correlation Coefficient ($\text{MCC}$) provides a symmetric quality metric in $[-1, +1]$:
 \begin{equation}
-\text{MCC} = \frac{(\text{TPos} \times \text{TNeg}) - (\text{FPos} \times \text{FNeg})}{\sqrt{\mathcal{D}_{\text{MCC}}}}, \quad \mathcal{D}_{\text{MCC}} = \prod_{c \in \{\text{TPos}, \text{TNeg}\}} \prod_{e \in \{\text{FPos}, \text{FNeg}\}} (c + e)
+\text{MCC} = \frac{(\text{TPos} \times \text{TNeg}) - (\text{FPos} \times \text{FNeg})}{\sqrt{\mathcal{D}_{\text{MCC}}}}
+\end{equation}
+where denominator factor $\mathcal{D}_{\text{MCC}}$ is defined as:
+\begin{equation}
+\mathcal{D}_{\text{MCC}} = \prod_{c \in \{\text{TPos}, \text{TNeg}\}} \prod_{e \in \{\text{FPos}, \text{FNeg}\}} (c + e)
 \end{equation}
 which preserves evaluative stability across disparate class and error ratios.
 
